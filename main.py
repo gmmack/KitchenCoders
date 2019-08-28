@@ -55,8 +55,6 @@ def runGame(level):
                             if function.snap():
                                 line_number = function.getLine(function.blockRect.centery)[1]
                                 BOARD[line_number] = [function]
-                                print("Block", function.text, "dropped at line", line_number)
-                                print(BOARD[line_number])
                         function.drag = False
                     for ingredient in level.ingredients:
                         if ingredient.drag:
@@ -82,7 +80,7 @@ def runGame(level):
         #     return level.next()
 
 
-# Draws background info
+# Draws background info TODO: Should go in Level class
 def drawBackground():
     # create font
     backgroundsFont = pygame.font.Font('freesansbold.ttf', 34)
@@ -94,7 +92,8 @@ def drawBackground():
     pygame.draw.line(DISPLAYSURF, gridcolor, (WINDOWWIDTH / 3, 0), (WINDOWWIDTH / 3, WINDOWHEIGHT), 5)
     pygame.draw.line(DISPLAYSURF, gridcolor, (2 * WINDOWWIDTH / 3, 0), (2 * WINDOWWIDTH / 3, WINDOWHEIGHT), 5)
     pygame.draw.line(DISPLAYSURF, gridcolor, (0, WINDOWHEIGHT / 2), (WINDOWWIDTH / 3, WINDOWHEIGHT / 2), 5)
-    pygame.draw.line(DISPLAYSURF, gridcolor, (2 * WINDOWWIDTH / 3, WINDOWHEIGHT / 4), (WINDOWWIDTH, WINDOWHEIGHT / 4), 5)
+    # draws line in left column
+    #pygame.draw.line(DISPLAYSURF, gridcolor, (2 * WINDOWWIDTH / 3, WINDOWHEIGHT / 4), (WINDOWWIDTH, WINDOWHEIGHT / 4), 5)
 
     # draw programming grid lines
     pygame.draw.line(DISPLAYSURF, gridcolor, (WINDOWWIDTH / 3, WINDOWHEIGHT / NUMLINES),
@@ -207,7 +206,6 @@ def drawBackground():
     DISPLAYSURF.blit(fifteenSurf, fifteenRect)
 
     # draw words
-
     functionsSurf = backgroundsFont.render('Functions', True, WHITE)
     functionsRect = functionsSurf.get_rect()
     functionsRect.midtop = (WINDOWWIDTH / 6, WINDOWHEIGHT / 100)
@@ -218,15 +216,17 @@ def drawBackground():
     ingredientsRect.midtop = (WINDOWWIDTH / 6, WINDOWHEIGHT / 2 + 2)
     DISPLAYSURF.blit(ingredientsSurf, ingredientsRect)
 
-    recipesSurf = backgroundsFont.render('Recipes', True, WHITE)
+    recipesSurf = backgroundsFont.render('Recipe', True, WHITE)
     recipesRect = recipesSurf.get_rect()
     recipesRect.midtop = (WINDOWWIDTH / 2, WINDOWHEIGHT / 100)
     DISPLAYSURF.blit(recipesSurf, recipesRect)
 
-    directionsSurf = backgroundsFont.render('Directions', True, WHITE)
-    directionsRect = directionsSurf.get_rect()
-    directionsRect.midtop = (5 * WINDOWWIDTH / 6, WINDOWHEIGHT / 16)
-    DISPLAYSURF.blit(directionsSurf, directionsRect)
+    titleSurf = backgroundsFont.render('Toast', True, WHITE)  # TODO: Will eventually want to change this to level.name instead of Directions
+    titleRect = titleSurf.get_rect()
+    titleRect.midtop = (5 * WINDOWWIDTH / 6, WINDOWHEIGHT / 16)
+    DISPLAYSURF.blit(titleSurf, titleRect)
+
+
 
 
 def drawPressKeyMsg():

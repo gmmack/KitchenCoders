@@ -13,6 +13,9 @@ WINDOWHEIGHT = user32.GetSystemMetrics(1)
 # Initialize pygame variables
 main.pygame.init()
 FPSCLOCK = main.pygame.time.Clock()
+info = main.pygame.display.Info()
+#WINDOWWIDTH = info.current_w
+#WINDOWHEIGHT = info.current_h
 DISPLAYSURF = main.pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), main.RESIZABLE)
 BASICFONT = main.pygame.font.Font('freesansbold.ttf', 18)
 BACKGROUNDSFONT = main.pygame.font.Font('freesansbold.ttf', 34)
