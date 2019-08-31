@@ -36,8 +36,7 @@ class Block(main.pygame.sprite.Sprite):
         blockXMin, blockYMax = self.blockRect.bottomleft
         blockXMax, blockYMin = self.blockRect.topright
         # Compare mouseX and mouseY to blockRect.bottomleft, blockRect.topright
-        if mouseX >= blockXMin and mouseX <= blockXMax and \
-                mouseY >= blockYMin and mouseY <= blockYMax:
+        if blockXMin <= mouseX <= blockXMax and blockYMin <= mouseY <= blockYMax:
             return True
         else:
             return False
@@ -138,20 +137,16 @@ class IBlock(Block):
 
         # TODO: Make sure the block currently there is something that can be snapped onto
         # If there's anything in the current line and block is within snappable range
-        if settings.BOARD[line_number] is not None:
+        if len(settings.BOARD[line_number]) > 0:
             other_block = settings.BOARD[line_number][-1]
             blockRect = other_block.blockRect
-            proximity = blockRect.right - blockRect.centerx
-            point = self.blockRect.midleft
-            # Check left center of block being dropped vs bounding box top - prox, right + prox, bottom + prox, center
-            # TODO: May need to modify to check collision with any blocks in settings.BOARD[line_number]
-            #if (other_block.right + proximity > point[0] > other_block.centerx and other_block.top - proximity < \
-            #        point[1] < other_block.bottom + proximity) or self.overlap(other_block):
+
             if self.overlap(other_block):
                 self.blockRect.midleft = settings.BOARD[line_number][-1].blockRect.midright  # gets back of board list
                 self.setPos(self.blockRect.center)
+                self.snapped = True
+                self.index = line_number
                 return True
-                # settings.BOARD[line_number].append(self)
         return False
 
     # TODO: if snappable(), draw shadow showing where block would be snapped to

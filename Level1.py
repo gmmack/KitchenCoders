@@ -33,20 +33,46 @@ class Level1(main.pygame.sprite.Sprite):
                     block.index = line_number
                     # Loop through board list finding curr block clicked
                     first, second = False, False
-                    for curr in settings.BOARD[line_number]:
-                        # TODO: Keep track of state of board[line_number] list to update
+                    position = 0
+                    #for curr in settings.BOARD[line_number]:  # TODO: Loop is only iterating once because it's removing the item
+                    #for i in range(len(settings.BOARD[line_number])):  #TODO: Need to change still,
+                        # Could iterate back to front, keep curr and prev (prev being the later in the list
+                        # When curr == block, call prev.setPos(mousePoint), prev.drag = True, then break
+                        # Don't worry about calling trailBlock(), can do that in updateBlocks
+                        # Keep count of number of iterations, then call pop() that many times
+                    count = 0
+                    for i in range(len(settings.BOARD[line_number]), 0, -1):
+                        curr = settings.BOARD[line_number][i-1]
+                        if curr == block:
+                            prev.setPos(mousePoint)
+                            prev.drag = True
+                            break
+                        else:
+                            count+=1
+                        prev = curr
+                    for i in range(count):
+                        settings.BOARD[line_number].pop()
+                        """curr = settings.BOARD[line_number][i]
                         if curr == block:
                             first = True
                         if second:
                             # Other times:
                             curr.trailBlock(prev)
-                        if first:
+                            print("In if second 1st, Board = ", settings.BOARD)
+                            settings.BOARD[line_number].pop(i)
+                            print("In if second 2nd, Board = ", settings.BOARD)
+                        elif first:
                             # First Time
                             curr.setPos(mousePoint)
                             curr.drag = True
+                            print("In if first 1st, Board = ", settings.BOARD)
+                            settings.BOARD[line_number].pop(i)
+                            print("In if first 2nd, Board = ", settings.BOARD)
                             first, second = False, True
+                        else:
+                            position += 1
                         prev = curr
-                    settings.BOARD[line_number] = None
+                        """
                 else:
                     block.setPos(mousePoint)
                     block.drag = True

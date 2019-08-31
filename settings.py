@@ -20,21 +20,21 @@ DISPLAYSURF = main.pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), main.RES
 BASICFONT = main.pygame.font.Font('freesansbold.ttf', 18)
 BACKGROUNDSFONT = main.pygame.font.Font('freesansbold.ttf', 34)
 BOARD = { # None if empty, list of objects snapped together otherwise
-            1: None,
-            2: None,
-            3: None,
-            4: None,
-            5: None,
-            6: None,
-            7: None,
-            8: None,
-            9: None,
-            10: None,
-            11: None,
-            12: None,
-            13: None,
-            14: None,
-            15: None
+            1: [],
+            2: [],
+            3: [],
+            4: [],
+            5: [],
+            6: [],
+            7: [],
+            8: [],
+            9: [],
+            10: [],
+            11: [],
+            12: [],
+            13: [],
+            14: [],
+            15: []
         }
 # CURRENTLY UNUSED
 # BACKGROUNDIMAGE = pygame.image.load("background.jpg").convert()

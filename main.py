@@ -54,15 +54,22 @@ def runGame(level):
                         if function.drag:
                             if function.snap():
                                 line_number = function.getLine(function.blockRect.centery)[1]
-                                BOARD[line_number] = [function]
+                                BOARD[line_number].append(function)
+                            else:
+                                function.index = -1
+                                function.snapped = False
                         function.drag = False
                     for ingredient in level.ingredients:
                         if ingredient.drag:
-                            ingredient.snap()
-                            line_number = function.getLine(function.blockRect.centery)[1]
-                            BOARD[line_number].append(ingredient)
+                            if ingredient.snap():
+                                line_number = function.getLine(function.blockRect.centery)[1]
+                                BOARD[line_number].append(ingredient)
+                            else:
+                                ingredient.index = -1
+                                ingredient.snapped = False
                         ingredient.drag = False
                     mousePoint = pygame.mouse.get_pos()
+                    print("BOARD = ", BOARD)
             elif event.type == pygame.MOUSEMOTION:
                 level.updateBlocks()
 
