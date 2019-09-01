@@ -7,6 +7,7 @@ class Level1(main.pygame.sprite.Sprite):
     def __init__(self):
         super(Level1, self).__init__()
         self.recipeTitle = "Toast"
+        self.draglist = []
         # self.next = Level2
         toast = Block.FBlock('Toast', (settings.WINDOWWIDTH / 24, settings.WINDOWHEIGHT / 16), len('toast'), True)
         breadSlice = Block.IBlock('Bread slice', (settings.WINDOWWIDTH / 24, 9*settings.WINDOWHEIGHT / 16), len('bread slice'), True)
@@ -40,7 +41,20 @@ class Level1(main.pygame.sprite.Sprite):
                         # When curr == block, call prev.setPos(mousePoint), prev.drag = True, then break
                         # Don't worry about calling trailBlock(), can do that in updateBlocks
                         # Keep count of number of iterations, then call pop() that many times
-                    count = 0
+                        # TODO: Add blocks into self.draglist once I've found block being dragged
+                        # Loop backwards until curr == block, then add curr to draglist.
+                        # Loop from curr until end of BOARD[line_number] appending each item to draglist
+                    for i in range(len(settings.BOARD[line_number])-1, -1, -1):
+                        curr = settings.BOARD[line_number][i]
+                        if curr == block:
+                            curr.setPos(mousePoint)
+                            curr.drag = True
+                            break
+                    for j in range(i, len(settings.BOARD[line_number])):  # Loop from found block index until end
+                        # removing from BOARD and adding to draglist
+                        settings.BOARD[line_number][i].snapped = False
+                        self.draglist.append(settings.BOARD[line_number].pop(i))
+                    """count = 0
                     for i in range(len(settings.BOARD[line_number]), 0, -1):
                         curr = settings.BOARD[line_number][i-1]
                         if curr == block:
@@ -52,7 +66,8 @@ class Level1(main.pygame.sprite.Sprite):
                         prev = curr
                     for i in range(count):
                         settings.BOARD[line_number].pop()
-                        """curr = settings.BOARD[line_number][i]
+                    
+                        curr = settings.BOARD[line_number][i]
                         if curr == block:
                             first = True
                         if second:
@@ -108,3 +123,13 @@ class Level1(main.pygame.sprite.Sprite):
         for ingredient in self.ingredients:
             if ingredient.drag:
                 ingredient.setPos(main.pygame.mouse.get_pos())
+        # Set first block in draglist to be mouse position, and rest of list trail the previous block
+        first = True
+        for curr_block in self.draglist:
+            if first:
+                self.draglist[0].setPos(main.pygame.mouse.get_pos())
+                first = False
+            else:
+                curr_block.trailBlock(prev)
+                pass
+            prev = curr_block

@@ -21,10 +21,10 @@ class Block(main.pygame.sprite.Sprite):
         self.textRect.center = point
         self.blockRect.center = point
 
-    # Sets self block to be hooked onto block
+    # Sets self block to be trailing behind block
     def trailBlock(self, block):
-        self.textRect.midleft = block.textRect.midright
         self.blockRect.midleft = block.blockRect.midright
+        self.textRect.center = self.blockRect.center
 
     def draw(self, color):
         main.pygame.draw.rect(settings.DISPLAYSURF, color, self.blockRect)
