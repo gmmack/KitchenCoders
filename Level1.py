@@ -33,17 +33,8 @@ class Level1(main.pygame.sprite.Sprite):
                     line_number = block.getLine(block.blockRect.centery)[1]
                     block.index = line_number
                     # Loop through board list finding curr block clicked
-                    first, second = False, False
-                    position = 0
-                    #for curr in settings.BOARD[line_number]:  # TODO: Loop is only iterating once because it's removing the item
-                    #for i in range(len(settings.BOARD[line_number])):  #TODO: Need to change still,
-                        # Could iterate back to front, keep curr and prev (prev being the later in the list
-                        # When curr == block, call prev.setPos(mousePoint), prev.drag = True, then break
-                        # Don't worry about calling trailBlock(), can do that in updateBlocks
-                        # Keep count of number of iterations, then call pop() that many times
-                        # TODO: Add blocks into self.draglist once I've found block being dragged
-                        # Loop backwards until curr == block, then add curr to draglist.
-                        # Loop from curr until end of BOARD[line_number] appending each item to draglist
+                    # Loop backwards until curr == block, then add curr to draglist.
+                    # Loop from curr until end of BOARD[line_number] appending each item to draglist
                     for i in range(len(settings.BOARD[line_number])-1, -1, -1):
                         curr = settings.BOARD[line_number][i]
                         if curr == block:
@@ -54,40 +45,6 @@ class Level1(main.pygame.sprite.Sprite):
                         # removing from BOARD and adding to draglist
                         settings.BOARD[line_number][i].snapped = False
                         self.draglist.append(settings.BOARD[line_number].pop(i))
-                    """count = 0
-                    for i in range(len(settings.BOARD[line_number]), 0, -1):
-                        curr = settings.BOARD[line_number][i-1]
-                        if curr == block:
-                            prev.setPos(mousePoint)
-                            prev.drag = True
-                            break
-                        else:
-                            count+=1
-                        prev = curr
-                    for i in range(count):
-                        settings.BOARD[line_number].pop()
-                    
-                        curr = settings.BOARD[line_number][i]
-                        if curr == block:
-                            first = True
-                        if second:
-                            # Other times:
-                            curr.trailBlock(prev)
-                            print("In if second 1st, Board = ", settings.BOARD)
-                            settings.BOARD[line_number].pop(i)
-                            print("In if second 2nd, Board = ", settings.BOARD)
-                        elif first:
-                            # First Time
-                            curr.setPos(mousePoint)
-                            curr.drag = True
-                            print("In if first 1st, Board = ", settings.BOARD)
-                            settings.BOARD[line_number].pop(i)
-                            print("In if first 2nd, Board = ", settings.BOARD)
-                            first, second = False, True
-                        else:
-                            position += 1
-                        prev = curr
-                        """
                 else:
                     block.setPos(mousePoint)
                     block.drag = True
