@@ -33,16 +33,17 @@ class Level1(main.pygame.sprite.Sprite):
                     line_number = block.getLine(block.blockRect.centery)[1]
                     block.index = line_number
                     # Loop through board list finding curr block clicked
-                    # Loop backwards until curr == block, then add curr to draglist.
-                    # Loop from curr until end of BOARD[line_number] appending each item to draglist
                     for i in range(len(settings.BOARD[line_number])-1, -1, -1):
                         curr = settings.BOARD[line_number][i]
                         if curr == block:
                             curr.setPos(mousePoint)
                             curr.drag = True
+                            index = i+1
+                            while index <= len(settings.BOARD[line_number])-1:
+                                settings.BOARD[line_number][index].trailBlock(settings.BOARD[line_number][index-1])
+                                index += 1
                             break
                     for j in range(i, len(settings.BOARD[line_number])):  # Loop from found block index until end
-                        # removing from BOARD and adding to draglist
                         settings.BOARD[line_number][i].snapped = False
                         self.draglist.append(settings.BOARD[line_number].pop(i))
                 else:
