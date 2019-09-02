@@ -53,6 +53,7 @@ class Level1(main.pygame.sprite.Sprite):
     # Loops through board seeing if the player has a winning state for the current level
     def checkWin(self):
         pass
+        # First create new 2d list populated by all the lines of BOARD where there is any code
         for num in range(1, 16):
             pass
             settings.BOARD[num]

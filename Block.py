@@ -114,13 +114,19 @@ class FBlock(Block):
         self.type = "function"
 
     # Snaps function blocks into place in whatever line of code they were dropped nearest, ret True if successful
-    def snap(self):
+    def snap(self, draglist):
         midBlockY = self.blockRect.centery
         yCoord, line_number = self.getLine(midBlockY)
         if self.blockRect.right > settings.WINDOWWIDTH/3 and self.blockRect.left < 2*settings.WINDOWWIDTH/3:
             self.snapped = True
             self.textRect.midleft = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2, yCoord)
             self.blockRect.midleft = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2, yCoord)
+            settings.BOARD[line_number].append(self)
+            if len(draglist) > 1:  # If there's anything else being dragged
+                for i in range(1, len(draglist)):
+                    draglist[i].trailBlock(draglist[i-1])
+                    draglist[i].snapped = True
+                    settings.BOARD[line_number].append(draglist[i])
             return True
         return False
 
@@ -131,7 +137,7 @@ class IBlock(Block):
         self.type = "ingredient"
 
     # Snaps ingredient block into place if near overlapping block in current line, ret True if successful
-    def snap(self):
+    def snap(self, draglist):
         midBlockY = self.blockRect.centery
         yCoord, line_number = self.getLine(midBlockY)
 
@@ -146,6 +152,12 @@ class IBlock(Block):
                 self.setPos(self.blockRect.center)
                 self.snapped = True
                 self.index = line_number
+                settings.BOARD[line_number].append(self)
+                if len(draglist) > 1:  # If there's anything else being dragged
+                    for i in range(1, len(draglist)):
+                        draglist[i].trailBlock(draglist[i - 1])
+                        draglist[i].snapped = True
+                        settings.BOARD[line_number].append(draglist[i])
                 return True
         return False
 

@@ -52,18 +52,18 @@ def runGame(level):
                     # Reset to nothing being dragged, and snap blocks together if close
                     for function in level.functions:
                         if function.drag:
-                            if function.snap():
+                            if function.snap(level.draglist):  # TODO: Move appending BOARD to snap()
                                 line_number = function.getLine(function.blockRect.centery)[1]
-                                BOARD[line_number].append(function)
+                                #BOARD[line_number].append(function)
                             else:
                                 function.index = -1
                                 function.snapped = False
                         function.drag = False
                     for ingredient in level.ingredients:
                         if ingredient.drag:
-                            if ingredient.snap():
+                            if ingredient.snap(level.draglist):  # TODO: Move appending BOARD to snap()
                                 line_number = function.getLine(function.blockRect.centery)[1]
-                                BOARD[line_number].append(ingredient)
+                                #BOARD[line_number].append(ingredient)
                             else:
                                 ingredient.index = -1
                                 ingredient.snapped = False
