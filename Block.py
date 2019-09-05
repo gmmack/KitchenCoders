@@ -30,6 +30,10 @@ class Block(main.pygame.sprite.Sprite):
         main.pygame.draw.rect(settings.DISPLAYSURF, color, self.blockRect)
         settings.DISPLAYSURF.blit(self.textSurf, self.textRect)
 
+    # Draws a shadow block where the block would appear if it were dropped
+    def draw_shadow(self):
+        pass
+
     # Returns true if point is on the block
     def collide(self, point):
         mouseX, mouseY = point
@@ -130,6 +134,14 @@ class FBlock(Block):
             return True
         return False
 
+    # Returns true if the block will be snapped upon release
+    def snappable(self):
+        midBlockY = self.blockRect.centery
+        yCoord, line_number = self.getLine(midBlockY)
+        if self.blockRect.right > settings.WINDOWWIDTH / 3 and self.blockRect.left < 2 * settings.WINDOWWIDTH / 3:
+            return True
+        return False
+
 
 class IBlock(Block):
     def __init__(self, text, center, length, bank):
@@ -161,8 +173,7 @@ class IBlock(Block):
                 return True
         return False
 
-    # TODO: if snappable(), draw shadow showing where block would be snapped to
-    # Returns true if the currently held function is one that can be snapped when dropped
+    # Returns true if the block will be snapped upon release
     def snappable(self):
         pass
 
