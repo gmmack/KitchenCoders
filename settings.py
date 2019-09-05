@@ -8,15 +8,18 @@ os.environ['SDL_VIDEO_CENTERED'] = '1'
 # Get window width and height
 user32 = ctypes.windll.user32
 WINDOWWIDTH = user32.GetSystemMetrics(0)
-WINDOWHEIGHT = user32.GetSystemMetrics(1)
+WINDOWHEIGHT = user32.GetSystemMetrics(1)-50
 
 # Initialize pygame variables
 main.pygame.init()
 FPSCLOCK = main.pygame.time.Clock()
 info = main.pygame.display.Info()
+print("WINDOW WIDTH =", WINDOWWIDTH)
+print("WINDOW HEIGHT =", WINDOWHEIGHT)
 #WINDOWWIDTH = info.current_w
 #WINDOWHEIGHT = info.current_h
-DISPLAYSURF = main.pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), main.RESIZABLE)
+DISPLAYSURF = main.pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), main.RESIZABLE | main.FULLSCREEN)
+#DISPLAYSURF = main.pygame.display.set_mode((0, 0), main.RESIZABLE | main.FULLSCREEN)
 BASICFONT = main.pygame.font.Font('freesansbold.ttf', 18)
 BACKGROUNDSFONT = main.pygame.font.Font('freesansbold.ttf', 34)
 BOARD = { # None if empty, list of objects snapped together otherwise
