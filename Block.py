@@ -164,18 +164,5 @@ class IBlock(Block):
     # TODO: if snappable(), draw shadow showing where block would be snapped to
     # Returns true if the currently held function is one that can be snapped when dropped
     def snappable(self):
-        midBlockY = self.blockRect.centery
-        yCoord, line_number = self.getLine(midBlockY)
-
-        # TODO: Make sure the block currently there is something that can be snapped onto
-        # If there's anything in the current line and block is within snappable range
-        if settings.BOARD[line_number] is not None:
-            other_block = settings.BOARD[line_number][-1].blockRect
-            proximity = other_block.right - other_block.centerx
-            point = self.blockRect.midleft
-            # Check left center of block being dropped vs bounding box top + prox, right + prox, bottom - prox, center
-            if other_block.right + proximity > point[0] > other_block.centerx and other_block.top - proximity < \
-                    point[1] < other_block.bottom + proximity:
-                return True
-        return False
+        pass
 

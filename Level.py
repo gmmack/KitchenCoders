@@ -43,12 +43,17 @@ class Level(main.pygame.sprite.Sprite):
                     block.drag = True
 
     # Loops through board seeing if the player has a winning state for the current level
-    def checkWin(self):
+    def check_win(self):
         pass
-        # First create new 2d list populated by all the lines of BOARD where there is any code
-        for num in range(1, 16):
+        # First create new dict populated by all the lines of BOARD where there is any code
+        # TODO: Loop through settings.BOARD, only do something if len(settings.BOARD[line_number] > 0; something in list
+        for line_number in range(len(settings.BOARD)):
+            if len(settings.BOARD[line_number]) > 0:  # If there's something in the line
+                # Do stuff
+                pass
+        """for num in range(1, 16):
             pass
-            settings.BOARD[num]
+            settings.BOARD[num]"""
 
     def draw(self):
         # Draw directions on right side of screen
@@ -60,11 +65,160 @@ class Level(main.pygame.sprite.Sprite):
         recipeTitleRect.midtop = (5*settings.WINDOWWIDTH/6, settings.WINDOWHEIGHT/16)
         settings.DISPLAYSURF.blit(recipeTitleSurf, recipeTitleRect)"""
 
+        self.drawBackground()
+
         # Draw blocks
         for function in self.functions:
             function.draw(settings.RED)
         for ingredient in self.ingredients:
             ingredient.draw(settings.GREEN)
+
+    # Draws background info
+    def drawBackground(self):
+        # create font
+        backgroundsFont = main.pygame.font.Font('freesansbold.ttf', 34)
+
+        gridcolor = settings.PINK
+        gridlength = 3
+
+        # draw grid lines
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 0), (settings.WINDOWWIDTH / 3, settings.WINDOWHEIGHT), 5)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (2 * settings.WINDOWWIDTH / 3, 0), (2 * settings.WINDOWWIDTH / 3, settings.WINDOWHEIGHT), 5)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (0, settings.WINDOWHEIGHT / 2), (settings.WINDOWWIDTH / 3, settings.WINDOWHEIGHT / 2), 5)
+        # draws line in left column
+        # pygame.draw.line(DISPLAYSURF, gridcolor, (2 * settings.WINDOWWIDTH / 3, settings.WINDOWHEIGHT / 4), (settings.WINDOWWIDTH, settings.WINDOWHEIGHT / 4), 5)
+
+        # draw programming grid lines
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, settings.WINDOWHEIGHT / 16), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 2 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 2 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 3 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 3 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 4 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 4 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 5 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 5 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 6 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 6 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 7 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 7 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 8 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 8 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 9 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 9 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 10 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 10 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 11 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 11 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 12 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 12 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 13 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 13 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 14 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 14 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+        main.pygame.draw.line(settings.DISPLAYSURF, gridcolor, (settings.WINDOWWIDTH / 3, 15 * settings.WINDOWHEIGHT / settings.NUMLINES),
+                         (2 * settings.WINDOWWIDTH / 3, 15 * settings.WINDOWHEIGHT / settings.NUMLINES), gridlength)
+
+        # draw line numbers
+        lineColor = settings.WHITE
+
+        oneSurf = backgroundsFont.render('1', True, lineColor)
+        oneRect = oneSurf.get_rect()
+        oneRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 2 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(oneSurf, oneRect)
+
+        twoSurf = backgroundsFont.render('2', True, lineColor)
+        twoRect = twoSurf.get_rect()
+        twoRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 3 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(twoSurf, twoRect)
+
+        threeSurf = backgroundsFont.render('3', True, lineColor)
+        threeRect = threeSurf.get_rect()
+        threeRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 4 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(threeSurf, threeRect)
+
+        fourSurf = backgroundsFont.render('4', True, lineColor)
+        fourRect = fourSurf.get_rect()
+        fourRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 5 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(fourSurf, fourRect)
+
+        fiveSurf = backgroundsFont.render('5', True, lineColor)
+        fiveRect = fiveSurf.get_rect()
+        fiveRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 6 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(fiveSurf, fiveRect)
+
+        sixSurf = backgroundsFont.render('6', True, lineColor)
+        sixRect = sixSurf.get_rect()
+        sixRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 7 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(sixSurf, sixRect)
+
+        sevenSurf = backgroundsFont.render('7', True, lineColor)
+        sevenRect = sevenSurf.get_rect()
+        sevenRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 8 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(sevenSurf, sevenRect)
+
+        eightSurf = backgroundsFont.render('8', True, lineColor)
+        eightRect = eightSurf.get_rect()
+        eightRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 9 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(eightSurf, eightRect)
+
+        nineSurf = backgroundsFont.render('9', True, lineColor)
+        nineRect = nineSurf.get_rect()
+        nineRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 10 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(nineSurf, nineRect)
+
+        tenSurf = backgroundsFont.render('10', True, lineColor)
+        tenRect = tenSurf.get_rect()
+        tenRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 11 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(tenSurf, tenRect)
+
+        elevenSurf = backgroundsFont.render('11', True, lineColor)
+        elevenRect = elevenSurf.get_rect()
+        elevenRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 12 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(elevenSurf, elevenRect)
+
+        twelveSurf = backgroundsFont.render('12', True, lineColor)
+        twelveRect = twelveSurf.get_rect()
+        twelveRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 13 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(twelveSurf, twelveRect)
+
+        thirteenSurf = backgroundsFont.render('13', True, lineColor)
+        thirteenRect = thirteenSurf.get_rect()
+        thirteenRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 14 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(thirteenSurf, thirteenRect)
+
+        fourteenSurf = backgroundsFont.render('14', True, lineColor)
+        fourteenRect = fourteenSurf.get_rect()
+        fourteenRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 15 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(fourteenSurf, fourteenRect)
+
+        fifteenSurf = backgroundsFont.render('15', True, lineColor)
+        fifteenRect = fifteenSurf.get_rect()
+        fifteenRect.center = (settings.WINDOWWIDTH / 3 + settings.BUFFER, 16 * settings.WINDOWHEIGHT / settings.NUMLINES - settings.HALFWAY)
+        settings.DISPLAYSURF.blit(fifteenSurf, fifteenRect)
+
+        # draw words
+        functionsSurf = backgroundsFont.render('Functions', True, settings.WHITE)
+        functionsRect = functionsSurf.get_rect()
+        functionsRect.midtop = (settings.WINDOWWIDTH / 6, settings.WINDOWHEIGHT / 100)
+        settings.DISPLAYSURF.blit(functionsSurf, functionsRect)
+
+        ingredientsSurf = backgroundsFont.render('Ingredients', True, settings.WHITE)
+        ingredientsRect = ingredientsSurf.get_rect()
+        ingredientsRect.midtop = (settings.WINDOWWIDTH / 6, settings.WINDOWHEIGHT / 2 + 2)
+        settings.DISPLAYSURF.blit(ingredientsSurf, ingredientsRect)
+
+        recipesSurf = backgroundsFont.render('Recipe', True, settings.WHITE)
+        recipesRect = recipesSurf.get_rect()
+        recipesRect.midtop = (settings.WINDOWWIDTH / 2, settings.WINDOWHEIGHT / 100)
+        settings.DISPLAYSURF.blit(recipesSurf, recipesRect)
+
+        titleSurf = backgroundsFont.render(self.recipeTitle, True,
+                                           settings.WHITE)  # TODO: Will eventually want to change this to level.name instead of Directions
+        titleRect = titleSurf.get_rect()
+        titleRect.midtop = (5 * settings.WINDOWWIDTH / 6, settings.WINDOWHEIGHT / 16)
+        settings.DISPLAYSURF.blit(titleSurf, titleRect)
 
     # Resets block position to be on top of mouse if dragged
     def updateBlocks(self):
