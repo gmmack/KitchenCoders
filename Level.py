@@ -45,12 +45,6 @@ class Level(main.pygame.sprite.Sprite):
     # Loops through board seeing if the player has a winning state for the current level
     def check_win(self):
         pass
-        # First create new dict populated by all the lines of BOARD where there is any code
-        # TODO: Loop through settings.BOARD, only do something if len(settings.BOARD[line_number] > 0; something in list
-        for line_number in range(len(settings.BOARD)):
-            if len(settings.BOARD[line_number]) > 0:  # If there's something in the line
-                # Do stuff
-                pass
         """for num in range(1, 16):
             pass
             settings.BOARD[num]"""
