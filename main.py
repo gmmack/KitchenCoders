@@ -6,21 +6,6 @@ from pygame.locals import *
 from Level1 import *
 from settings import *
 
-"""
-CURRENTLY UNUSED: SAVE FOR LATER
-# Function to display images
-_image_library = {}
-
-def get_image(path):
-    global _image_library
-    image = _image_library.get(path)
-    if image == None:
-        canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
-        image = pygame.image.load(canonicalized_path)
-        _image_library[path] = image
-    return image
-"""
-
 
 def main():
     pygame.display.set_caption('Kitchen Coders')
@@ -32,7 +17,8 @@ def main():
 
 
 def runGame(level):
-    while True:  # main game loop
+    running = True
+    while running:  # main game loop
         for event in pygame.event.get():  # event handling loop
             if event.type == QUIT:
                 terminate()
@@ -44,9 +30,11 @@ def runGame(level):
                 if event.button == 1:
                     mousePoint = pygame.mouse.get_pos()
                     for function in level.functions:
-                        level.handleMouseDown(mousePoint, function)
+                        if level.handleMouseDown(mousePoint, function):
+                            running = False
                     for ingredient in level.ingredients:
-                        level.handleMouseDown(mousePoint, ingredient)
+                        if level.handleMouseDown(mousePoint, ingredient):
+                            running = False
             elif event.type == MOUSEBUTTONUP:  # Mouse click lifted
                 if event.button == 1:
                     # Reset to nothing being dragged, and snap blocks together if close
@@ -55,7 +43,6 @@ def runGame(level):
                             if function.snap(level.draglist):
                                 pass
                             else:
-                                function.index = -1
                                 function.snapped = False
                         function.drag = False
                     for ingredient in level.ingredients:
@@ -63,7 +50,6 @@ def runGame(level):
                             if ingredient.snap(level.draglist):
                                 pass
                             else:
-                                ingredient.index = -1
                                 ingredient.snapped = False
                         ingredient.drag = False
                     mousePoint = pygame.mouse.get_pos()
@@ -85,6 +71,8 @@ def runGame(level):
 
         # if (level.check_win) -- triggered by button press of "Run Code" button,
         #     return level.next()
+    return level.next()
+
 
 def drawPressKeyMsg():
     pressKeySurf = BASICFONT.render('Press a key to play.', True, WHITE)

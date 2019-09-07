@@ -17,6 +17,7 @@ class Level1(Level.Level):
 
     # For success: Toast->Bread Slice
     # Create dict of function->ingredients
+    # Returns true if BOARD is in a winning state
     def check_win(self):
         # function_list = []
         # ingredients_list = []

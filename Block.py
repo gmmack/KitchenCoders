@@ -6,7 +6,6 @@ class Block(main.pygame.sprite.Sprite):
     def __init__(self, text, center, length, bank):
         super(Block, self).__init__()
         self.drag = False
-        self.index = -1  # Keep track of key to BOARD so that the whole chain can be updated
         self.text = text
         self.bank = bank  # Use to keep track of static bank blocks which don't ever move/disappear
         self.snapped = False  # Use to update BOARD state when you pick up a snapped block
@@ -163,7 +162,6 @@ class IBlock(Block):
                 self.blockRect.midleft = settings.BOARD[line_number][-1].blockRect.midright  # gets back of board list
                 self.setPos(self.blockRect.center)
                 self.snapped = True
-                self.index = line_number
                 settings.BOARD[line_number].append(self)
                 if len(draglist) > 1:  # If there's anything else being dragged
                     for i in range(1, len(draglist)):

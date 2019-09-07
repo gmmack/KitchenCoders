@@ -8,7 +8,7 @@ os.environ['SDL_VIDEO_CENTERED'] = '1'
 # Get window width and height
 user32 = ctypes.windll.user32
 WINDOWWIDTH = user32.GetSystemMetrics(0)
-WINDOWHEIGHT = user32.GetSystemMetrics(1)-50
+WINDOWHEIGHT = user32.GetSystemMetrics(1)
 
 # Initialize pygame variables
 main.pygame.init()
@@ -18,7 +18,7 @@ print("WINDOW WIDTH =", WINDOWWIDTH)
 print("WINDOW HEIGHT =", WINDOWHEIGHT)
 #WINDOWWIDTH = info.current_w
 #WINDOWHEIGHT = info.current_h
-DISPLAYSURF = main.pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), main.RESIZABLE | main.FULLSCREEN)
+DISPLAYSURF = main.pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), main.FULLSCREEN)
 #DISPLAYSURF = main.pygame.display.set_mode((0, 0), main.RESIZABLE | main.FULLSCREEN)
 BASICFONT = main.pygame.font.Font('freesansbold.ttf', 18)
 BACKGROUNDSFONT = main.pygame.font.Font('freesansbold.ttf', 34)
@@ -41,6 +41,19 @@ BOARD = { # None if empty, list of objects snapped together otherwise
         }
 # CURRENTLY UNUSED
 # BACKGROUNDIMAGE = pygame.image.load("background.jpg").convert()
+
+# Function to display images
+image_library = {}
+
+
+def get_image(path):
+    global _image_library
+    image = _image_library.get(path)
+    if image == None:
+        canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
+        image = main.pygame.image.load(canonicalized_path)
+        image_library[path] = image
+    return image
 
 # Set variables
 FPS = 60

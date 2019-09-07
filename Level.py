@@ -6,6 +6,14 @@ import Block
 class Level(main.pygame.sprite.Sprite):
     def __init__(self):
         super(Level, self).__init__()
+        size = int(settings.WINDOWWIDTH / 10)
+        stove_path, recycle_path = 'images/stove.png', 'images/recycle.png'
+        self.cookImg = main.pygame.image.load(stove_path)
+        self.cookImg = main.pygame.transform.scale(self.cookImg, (size, size))
+        self.recycleImg = main.pygame.image.load(recycle_path)
+        self.recycleImg = main.pygame.transform.scale(self.recycleImg, (size, size))
+        settings.image_library[stove_path] = self.cookImg
+        settings.image_library[recycle_path] = self.recycleImg
 
     # Checks for collision and moves the clicked block
     def handleMouseDown(self, mousePoint, block):
@@ -23,7 +31,6 @@ class Level(main.pygame.sprite.Sprite):
             else:  # Need to deal with non-snapped and snapped fcn blocks
                 if block.snapped:
                     line_number = block.getLine(block.blockRect.centery)[1]
-                    block.index = line_number
                     # Loop through board list finding curr block clicked
                     for i in range(len(settings.BOARD[line_number])-1, -1, -1):
                         curr = settings.BOARD[line_number][i]
@@ -41,13 +48,15 @@ class Level(main.pygame.sprite.Sprite):
                 else:
                     block.setPos(mousePoint)
                     block.drag = True
+        elif self.cook_pressed(mousePoint):
+            self.check_win()
+            return True
+        return False
 
-    # Loops through board seeing if the player has a winning state for the current level
-    def check_win(self):
+    # Returns true if the cook button was pressed
+    def cook_pressed(self, point):
         pass
-        """for num in range(1, 16):
-            pass
-            settings.BOARD[num]"""
+        # Check if the point is within the x, y position of the cook icon; may need to add instance variables
 
     def draw(self):
         # Draw directions on right side of screen
@@ -71,6 +80,13 @@ class Level(main.pygame.sprite.Sprite):
     def drawBackground(self):
         # create font
         backgroundsFont = main.pygame.font.Font('freesansbold.ttf', 34)
+
+        # Draw recycle/cook sprites
+        x_two_thirds = 2*settings.WINDOWWIDTH/3
+        x_offset_by_size = settings.WINDOWWIDTH - settings.WINDOWWIDTH / 10
+        y_offset_by_size = settings.WINDOWHEIGHT - settings.WINDOWWIDTH / 10
+        settings.DISPLAYSURF.blit(self.recycleImg, (x_offset_by_size, y_offset_by_size))
+        settings.DISPLAYSURF.blit(self.cookImg, (x_two_thirds, y_offset_by_size))
 
         gridcolor = settings.PINK
         gridlength = 3
