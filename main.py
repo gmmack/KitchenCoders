@@ -10,13 +10,13 @@ from settings import *
 def main():
     pygame.display.set_caption('Kitchen Coders')
     showStartScreen()
-    level = Level1()
+    level = Level1
     while level != -1:
-        runGame(level)  # Will eventually want level = runGame(level)
+        level = run_game(level())  # Will eventually want level = runGame(level)
         # showGameOverScreen()
 
 
-def runGame(level):
+def run_game(level):
     running = True
     while running:  # main game loop
         for event in pygame.event.get():  # event handling loop
@@ -71,7 +71,7 @@ def runGame(level):
 
         # if (level.check_win) -- triggered by button press of "Run Code" button,
         #     return level.next()
-    return level.next()
+    return level.next
 
 
 def drawPressKeyMsg():

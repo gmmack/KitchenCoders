@@ -1,4 +1,5 @@
 import Level
+import Level2
 import settings
 import Block
 
@@ -9,7 +10,7 @@ class Level1(Level.Level):
         self.recipeTitle = "Toast"
         self.solution = [['Toast', 'Bread Slice']]
         self.draglist = []
-        # self.next = Level2
+        self.next = Level2.Level2
         toast = Block.FBlock('Toast', (settings.WINDOWWIDTH / 24, settings.WINDOWHEIGHT / 16), len('Toast'), True)
         breadSlice = Block.IBlock('Bread Slice', (settings.WINDOWWIDTH / 24, 9 * settings.WINDOWHEIGHT / 16),
                                   len('Bread Slice'), True)
