@@ -19,3 +19,6 @@ class Level2(Level.Level):
         breadSlice = Block.IBlock('Bread Slice', (settings.WINDOWWIDTH / 24, 9 * settings.WINDOWHEIGHT / 16),
                                   len('Bread Slice'), True)
         self.functions, self.ingredients = [toast, butter], [breadSlice]
+
+    def check_win(self):
+        pass

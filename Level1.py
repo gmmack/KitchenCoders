@@ -17,26 +17,15 @@ class Level1(Level.Level):
         self.functions, self.ingredients = [toast], [breadSlice]
 
     # For success: Toast->Bread Slice
-    # Create dict of function->ingredients
     # Returns true if BOARD is in a winning state
     def check_win(self):
-        # function_list = []
-        # ingredients_list = []
         first_index = 0
         all_good = False
-        for line_number in range(1, settings.NUMLINES):
+        for line_number in range(1, settings.NUMLINES):  # Loop through lines
             if len(settings.BOARD[line_number]) > 0:  # If there's something in the line
-                """# Found a line with something, loop through chain
-                first = True
-                for block in settings.board[line_number]:
-                    if first:
-                        function = block
-                        first = False
-                    else:
-                        ingredients_list.append(block)"""
                 second_index = 0
-                for item in settings.BOARD[line_number]:
-                    if item.text == self.solution[first_index][second_index]:
+                for item in settings.BOARD[line_number]:  # Loop through current line
+                    if item.text == self.solution[first_index][second_index]:  # If item matches solution
                         all_good = True
                     else:
                         all_good = False

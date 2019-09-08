@@ -229,8 +229,7 @@ class Level(main.pygame.sprite.Sprite):
         recipesRect.midtop = (settings.WINDOWWIDTH / 2, settings.WINDOWHEIGHT / 100)
         settings.DISPLAYSURF.blit(recipesSurf, recipesRect)
 
-        titleSurf = backgroundsFont.render(self.recipeTitle, True,
-                                           settings.WHITE)  # TODO: Will eventually want to change this to level.name instead of Directions
+        titleSurf = backgroundsFont.render(self.recipeTitle, True, settings.WHITE)
         titleRect = titleSurf.get_rect()
         titleRect.midtop = (5 * settings.WINDOWWIDTH / 6, settings.WINDOWHEIGHT / 16)
         settings.DISPLAYSURF.blit(titleSurf, titleRect)
