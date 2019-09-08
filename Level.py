@@ -52,8 +52,7 @@ class Level(main.pygame.sprite.Sprite):
                     block.setPos(mousePoint)
                     block.drag = True
         elif self.cook_pressed(mousePoint):
-            self.check_win()
-            return True
+            return self.check_win()
         return False
 
     # Returns true if the cook button was pressed
