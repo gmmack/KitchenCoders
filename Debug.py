@@ -10,10 +10,22 @@ class Debug(main.pygame.sprite.Sprite):
         # Could also have list of strings with names of blocks from the error line
 
     # Draws debug info for when player has incorrect code
-    def draw_debug(self):
-        text = "Oops! Looks like that didn't quite work.\n Check line " + self.line_number + " for the error."
-        debugSurf = settings.BACKGROUNDSFONT.render(text, True, settings.WHITE)
-        debugRect = debugSurf.get_rect()
-        debugRect.midtop = (0, 0)  # TODO: Need to figure out position
-        settings.DISPLAYSURF.blit(debugSurf, debugRect)
+    def draw_debug(self, size):
+        if self.line_number is not -1:
+            text1 = "Check line " + str(self.line_number) + " for the error."
+            text2 = "Oops! That didn't work."
+        else:
+            text1 = "you try to run your code!"
+            text2 = "Drag some blocks before"
+        text_height = settings.BACKGROUNDSFONT.get_height()
+
+        debug1Surf = settings.BACKGROUNDSFONT.render(text1, True, settings.RED)
+        debug1Rect = debug1Surf.get_rect()
+        debug1Rect.midbottom = (5*settings.WINDOWWIDTH/6, settings.WINDOWHEIGHT - size)
+        settings.DISPLAYSURF.blit(debug1Surf, debug1Rect)
+
+        debug2Surf = settings.BACKGROUNDSFONT.render(text2, True, settings.RED)
+        debug2Rect = debug2Surf.get_rect()
+        debug2Rect.midbottom = (5 * settings.WINDOWWIDTH / 6, settings.WINDOWHEIGHT - size - text_height)
+        settings.DISPLAYSURF.blit(debug2Surf, debug2Rect)
 

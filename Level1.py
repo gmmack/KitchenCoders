@@ -24,16 +24,43 @@ class Level1(Level.Level):
         for line_number in range(1, settings.NUMLINES):  # Loop through lines
             if len(settings.BOARD[line_number]) > 0:  # If there's something in the line
                 second_index = 0
-                for item in settings.BOARD[line_number]:  # Loop through current line
-                    if item.text == self.solution[first_index][second_index]:  # If item matches solution
-                        all_good = True
-                    else:
-                        all_good = False
-                        self.debug.line_number = line_number
-                    second_index += 1
-                second_index += 1
+                if len(self.solution[first_index]) == len(settings.BOARD[line_number]):  # If line has correct length
+                    for item in self.solution[first_index]:  # Loop through solution list
+                        if item == settings.BOARD[line_number][second_index].text:  # Compare solution to board
+                            all_good = True
+                            print("Entered if")
+                        else:
+                            print("Entered else")
+                            all_good = False
+                            self.debug.debug_on = True
+                            self.debug.line_number = line_number
+                        print("1:Looped, second_index=", second_index)
+                        second_index += 1
+                        print("2:Looped, second_index=", second_index)
+
+                    first_index += 1
+                else:  # Line lengths don't match, return False immediately
+                    self.debug.debug_on = True
+                    self.debug.line_number = line_number
+                    return False
                 if not all_good:  # Used for early exit
                     return all_good
+            if first_index >= len(self.solution):
+                return all_good
         if not all_good:
             self.debug.debug_on = True
         return all_good
+
+
+"""for item in settings.BOARD[line_number]:  # Loop through current line
+    # TODO: Loop through solution list instead of board list, comparing each index to respective board index
+    if item.text == self.solution[first_index][second_index]:  # If item matches solution
+        all_good = True
+        print("Entered if")
+    else:
+        print("Entered else")
+        all_good = False
+        self.debug.line_number = line_number
+    print("1:Looped, second_index=", second_index)
+    second_index += 1
+    print("2:Looped, second_index=", second_index)"""
