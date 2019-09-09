@@ -29,8 +29,11 @@ class Level1(Level.Level):
                         all_good = True
                     else:
                         all_good = False
+                        self.debug.line_number = line_number
                     second_index += 1
                 second_index += 1
-                """if not all_good: # Could use for early exit 
-                    return all_good"""
+                if not all_good:  # Used for early exit
+                    return all_good
+        if not all_good:
+            self.debug.debug_on = True
         return all_good

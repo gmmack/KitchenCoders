@@ -1,11 +1,13 @@
 import settings
 import main
 import Block
+import Debug
 
 
 class Level(main.pygame.sprite.Sprite):
     def __init__(self):
         super(Level, self).__init__()
+        self.debug = Debug.Debug()
         # TODO: Create cookButton class and instantiate cookButton object as instance variable in level
         size = int(settings.WINDOWWIDTH / 8)
         stove_path, recycle_path = 'images/stove.png', 'images/recycle.png'
@@ -92,6 +94,10 @@ class Level(main.pygame.sprite.Sprite):
         settings.DISPLAYSURF.blit(self.recycle_img, (x_offset_by_size, y_offset_by_size))
         #settings.DISPLAYSURF.blit(self.cook_img, (x_two_thirds, y_offset_by_size))
         settings.DISPLAYSURF.blit(self.cook_img, self.cook_top_left)
+
+        # If debug is set draw debug info
+        if self.debug.debug_on:
+            self.debug.draw_debug()
 
         gridcolor = settings.PINK
         gridlength = 3

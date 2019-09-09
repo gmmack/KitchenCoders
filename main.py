@@ -40,16 +40,12 @@ def run_game(level):
                     # Reset to nothing being dragged, and snap blocks together if close
                     for function in level.functions:
                         if function.drag:
-                            if function.snap(level.draglist):
-                                pass
-                            else:
+                            if not function.snap(level.draglist):
                                 function.snapped = False
                         function.drag = False
                     for ingredient in level.ingredients:
                         if ingredient.drag:
-                            if ingredient.snap(level.draglist):
-                                pass
-                            else:
+                            if not ingredient.snap(level.draglist):
                                 ingredient.snapped = False
                         ingredient.drag = False
                     mousePoint = pygame.mouse.get_pos()
