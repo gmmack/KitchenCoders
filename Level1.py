@@ -28,15 +28,11 @@ class Level1(Level.Level):
                     for item in self.solution[first_index]:  # Loop through solution list
                         if item == settings.BOARD[line_number][second_index].text:  # Compare solution to board
                             all_good = True
-                            print("Entered if")
                         else:
-                            print("Entered else")
                             all_good = False
                             self.debug.debug_on = True
                             self.debug.line_number = line_number
-                        print("1:Looped, second_index=", second_index)
                         second_index += 1
-                        print("2:Looped, second_index=", second_index)
 
                     first_index += 1
                 else:  # Line lengths don't match, return False immediately
