@@ -8,7 +8,8 @@ class Level1(Level.Level):
     def __init__(self):
         super(Level1, self).__init__()
         self.recipeTitle = "Toast"
-        self.solution = [['Toast', 'Bread Slice']]
+        self.solutions = self.create_solution_dicts()
+        # self.solution = [['Toast', 'Bread Slice']]
         self.draglist = []
         self.next = Level2.Level2
         toast = Block.FBlock('Toast', (settings.WINDOWWIDTH / 24, settings.WINDOWHEIGHT / 16), len('Toast'), True)
@@ -18,7 +19,7 @@ class Level1(Level.Level):
 
     # For success: Toast->Bread Slice
     # Returns true if BOARD is in a winning state
-    def check_win(self):
+    """def check_win(self):
         first_index = 0
         all_good = False
         for line_number in range(1, settings.NUMLINES):  # Loop through lines
@@ -45,7 +46,14 @@ class Level1(Level.Level):
                 return all_good
         if not all_good:
             self.debug.debug_on = True
-        return all_good
+        return all_good"""
+
+    @staticmethod
+    def create_solution_dicts():
+        sol1 = settings.create_blank_dict()
+        sol1[1] = ['Toast', 'Bread Slice']
+        solution = [sol1]
+        return solution
 
 
 """for item in settings.BOARD[line_number]:  # Loop through current line

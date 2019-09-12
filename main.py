@@ -50,7 +50,7 @@ def run_game(level):
                         ingredient.drag = False
                     mousePoint = pygame.mouse.get_pos()
                     level.draglist.clear()  # Clear list of blocks being dragged
-                    print("BOARD = ", BOARD)
+                    #print("BOARD = ", BOARD)
             elif event.type == pygame.MOUSEMOTION:
                 level.updateBlocks()
             elif event.type == pygame.VIDEORESIZE:
