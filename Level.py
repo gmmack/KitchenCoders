@@ -62,7 +62,6 @@ class Level(main.pygame.sprite.Sprite):
     # Returns true if BOARD is in a winning state
     def check_win(self):
         # Populate new board dict with settings.BOARD discounting any blank lines
-        print("Beginning of check_win")
         board = settings.create_blank_dict()
         new_line_number = 1
         for line_number in range(1, settings.NUMLINES):  # Loop through lines
@@ -76,25 +75,26 @@ class Level(main.pygame.sprite.Sprite):
         for dictionary in self.solutions:
             if dictionary == board:
                 return True
-        print("BOARD = ", board)
-        print("DICTIONARY = ", dictionary)
 
-        # TODO: Issue; I reset the board to ignore blank lines so the line number isn't the same as the real board state
         # Initialize error count list to 0's
         error_counts = []
         for i in range(settings.NUMLINES):
             error_counts.append(0)
+
         for solution in self.solutions:  # Loop through solution dicts
+            solution_line = 1
             for line_number in range(1, settings.NUMLINES):  # Inner loop through each line of board
-                # Loop through board[line_number] creating list of same size with each block's text
-                board_text = []
-                for block in board[line_number]:
-                    board_text.append(block)
-                # Compare block list at each line of board to block list at corresponding line of solution
-                if board_text != solution[line_number]:
-                    error_counts[line_number-1] += 1  # Increment error count
-        print("Error counts = ", error_counts)
-        # Determine first line with error count == len(self.solutions) (Count is 0 indexed, lines are 1 indexed)
+                if len(settings.BOARD[line_number]) > 0:  # If there's something in the line
+                    # Loop through board[line_number] creating list of same size with each block's text
+                    board_text = []
+                    for block in settings.BOARD[line_number]:
+                        board_text.append(block.text)
+                    # Compare block list at each line of board to block list at corresponding line of solution
+                    if board_text != solution[solution_line]:
+                        error_counts[line_number-1] += 1  # Increment error count
+                    solution_line += 1
+
+        # Determine first line with error count same as num of solutions (Count is 0 indexed, lines are 1 indexed)
         max_line = -1
         max_count = error_counts[0]
         for line_number in range(1, settings.NUMLINES):
@@ -108,14 +108,8 @@ class Level(main.pygame.sprite.Sprite):
                 max_line = line_number
 
         self.debug.line_number = max_line
-        print("debug.line number = ", self.debug.line_number)
         self.debug.debug_on = True
         return False
-        # Need new way to set debug.line_number
-        # Could try: Creating function error_line(board) for each individual level;
-        # Loop through solution dicts, inner loop through each line of board; compare board[line_num] to each current
-        # solution dict[line_number]; keep track of how many don't match on each line and set debug.line_number to be
-        # the first line where the count of errors is the same as the number of solution dicts (len(self.solutions))
 
     # Returns true if the cook button was pressed
     def cook_pressed(self, point):
