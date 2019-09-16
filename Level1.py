@@ -54,17 +54,3 @@ class Level1(Level.Level):
         sol1[1] = ['Toast', 'Bread Slice']
         solution = [sol1]
         return solution
-
-
-"""for item in settings.BOARD[line_number]:  # Loop through current line
-    # TODO: Loop through solution list instead of board list, comparing each index to respective board index
-    if item.text == self.solution[first_index][second_index]:  # If item matches solution
-        all_good = True
-        print("Entered if")
-    else:
-        print("Entered else")
-        all_good = False
-        self.debug.line_number = line_number
-    print("1:Looped, second_index=", second_index)
-    second_index += 1
-    print("2:Looped, second_index=", second_index)"""

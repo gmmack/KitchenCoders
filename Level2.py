@@ -20,10 +20,8 @@ class Level2(Level.Level):
                                   len('Bread Slice'), True)
         self.functions, self.ingredients = [toast, butter], [breadSlice]
 
-    """def check_win(self):
-        pass"""
-
-    def create_solution_dicts(self):
+    @staticmethod
+    def create_solution_dicts():
         sol1 = settings.create_blank_dict()
         sol1[1] = ['Toast', 'Bread Slice']
         sol1[2] = ['Butter', 'Bread Slice']
