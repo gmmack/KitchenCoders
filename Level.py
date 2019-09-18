@@ -12,15 +12,10 @@ class Level(main.pygame.sprite.Sprite):
         # TODO: Create cookButton class and instantiate cookButton object as instance variable in level
         size = int(settings.WINDOWWIDTH / 8)
         self.img_size = size
-        stove_path, recycle_path = 'images/stove.png', 'images/recycle.png'
+        recycle_path = 'images/recycle.png'
         self.cook = CookButton.CookButton(size)
-        """self.cook_img = main.pygame.image.load(stove_path)
-        self.cook_img = main.pygame.transform.scale(self.cook_img, (size, size))
-        self.cook_top_left = (2*settings.WINDOWWIDTH/3, settings.WINDOWHEIGHT - size)
-        self.cook_bot_right = (2*settings.WINDOWWIDTH/3 + size, settings.WINDOWHEIGHT)"""
         self.recycle_img = main.pygame.image.load(recycle_path)
         self.recycle_img = main.pygame.transform.scale(self.recycle_img, (size, size))
-        # settings.image_library[stove_path] = self.cook_img
         settings.image_library[recycle_path] = self.recycle_img
 
     # Checks for collision and moves the clicked block
@@ -56,7 +51,6 @@ class Level(main.pygame.sprite.Sprite):
                 else:
                     block.setPos(mousePoint)
                     block.drag = True
-        # elif self.cook_pressed(mousePoint):  # TODO: Modify for CookButton
         elif self.cook.button_pressed(mousePoint):
             return self.check_win()
         return False
@@ -113,13 +107,6 @@ class Level(main.pygame.sprite.Sprite):
         self.debug.debug_on = True
         return False
 
-    # Returns true if the cook button was pressed  # TODO: Can remove this later
-    def cook_pressed(self, point):
-        if self.cook_bot_right[0] > point[0] > self.cook_top_left[0] and \
-                self.cook_top_left[1] < point[1] < self.cook_bot_right[1]:
-            return True
-        return False
-
     def draw(self):
         # Draw directions on right side of screen
 
@@ -148,8 +135,7 @@ class Level(main.pygame.sprite.Sprite):
         x_offset_by_size = settings.WINDOWWIDTH - settings.WINDOWWIDTH / 8
         y_offset_by_size = settings.WINDOWHEIGHT - settings.WINDOWWIDTH / 8
         settings.DISPLAYSURF.blit(self.recycle_img, (x_offset_by_size, y_offset_by_size))
-        #settings.DISPLAYSURF.blit(self.cook_img, (x_two_thirds, y_offset_by_size))
-        # settings.DISPLAYSURF.blit(self.cook_img, self.cook_top_left)  # TODO: Move to CookButton class
+        self.cook.draw()
 
         # If debug is set draw debug info
         if self.debug.debug_on:
