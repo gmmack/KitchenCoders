@@ -12,7 +12,7 @@ def main():
     showStartScreen()
     level = Level1
     while level != -1:
-        level = run_game(level())  # Will eventually want level = runGame(level)
+        level = run_game(level())
         # showGameOverScreen()
 
 
