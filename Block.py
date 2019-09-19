@@ -3,31 +3,37 @@ import main
 
 
 class Block(main.pygame.sprite.Sprite):
-    def __init__(self, text, center, length, bank):
+    def __init__(self, text, center, length, bank, path):
         super(Block, self).__init__()
         self.drag = False
         self.text = text
         self.bank = bank  # Use to keep track of static bank blocks which don't ever move/disappear
         self.snapped = False  # Use to update BOARD state when you pick up a snapped block
-        self.blockSurf = main.pygame.Surface((10 * length, 20))
+        self.path = path
+        height = int(settings.WINDOWHEIGHT/24)
+        # self.blockSurf = main.pygame.Surface((10 * length, 20))
+        self.blockSurf = main.pygame.image.load(path)
+        self.blockSurf = main.pygame.transform.scale(self.blockSurf, (height*2, height))
+        settings.image_library[self.path] = self.blockSurf
         self.blockRect = self.blockSurf.get_rect()
-        self.textSurf = settings.BASICFONT.render(text, True, settings.WHITE)
-        self.textRect = self.textSurf.get_rect()
+        # self.textSurf = settings.BASICFONT.render(text, True, settings.WHITE)
+        # self.textRect = self.textSurf.get_rect()
         self.setPos(center)
 
     # Sets position of block to be centered on point
     def setPos(self, point):
-        self.textRect.center = point
+        # self.textRect.center = point
         self.blockRect.center = point
 
     # Sets self block to be trailing behind block
     def trailBlock(self, block):
         self.blockRect.midleft = block.blockRect.midright
-        self.textRect.center = self.blockRect.center
+        # self.textRect.center = self.blockRect.center
 
     def draw(self, color):
-        main.pygame.draw.rect(settings.DISPLAYSURF, color, self.blockRect)
-        settings.DISPLAYSURF.blit(self.textSurf, self.textRect)
+        # main.pygame.draw.rect(settings.DISPLAYSURF, color, self.blockRect)
+        # settings.DISPLAYSURF.blit(self.textSurf, self.textRect)
+        settings.DISPLAYSURF.blit(self.blockSurf, self.blockRect)
 
     # Draws a shadow block where the block would appear if it were dropped
     def draw_shadow(self):
@@ -112,8 +118,8 @@ class Block(main.pygame.sprite.Sprite):
 
 
 class FBlock(Block):
-    def __init__(self, text, center, length, bank):
-        super(FBlock, self).__init__(text, center, length, bank)
+    def __init__(self, text, center, length, bank, path):
+        super(FBlock, self).__init__(text, center, length, bank, path)
         self.type = "function"
 
     # Snaps function blocks into place in whatever line of code they were dropped nearest, ret True if successful
@@ -122,7 +128,7 @@ class FBlock(Block):
         yCoord, line_number = self.getLine(midBlockY)
         if self.blockRect.right > settings.WINDOWWIDTH/3 and self.blockRect.left < 2*settings.WINDOWWIDTH/3:
             self.snapped = True
-            self.textRect.midleft = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2, yCoord)
+            # self.textRect.midleft = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2, yCoord)
             self.blockRect.midleft = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2, yCoord)
             settings.BOARD[line_number].append(self)
             if len(draglist) > 1:  # If there's anything else being dragged
@@ -143,8 +149,8 @@ class FBlock(Block):
 
 
 class IBlock(Block):
-    def __init__(self, text, center, length, bank):
-        super(IBlock, self).__init__(text, center, length, bank)
+    def __init__(self, text, center, length, bank, path):
+        super(IBlock, self).__init__(text, center, length, bank, path)
         self.type = "ingredient"
 
     # Snaps ingredient block into place if near overlapping block in current line, ret True if successful

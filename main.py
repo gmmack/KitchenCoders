@@ -67,6 +67,7 @@ def run_game(level):
 
         # if (level.check_win) -- triggered by button press of "Run Code" button,
         #     return level.next()
+    settings.BOARD = settings.create_blank_dict()
     return level.next
 
 
