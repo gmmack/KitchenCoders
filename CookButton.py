@@ -7,12 +7,10 @@ class CookButton(main.pygame.sprite.Sprite):
         super(CookButton, self).__init__()
         self.size = size
         image_path = 'images/stove.png'
-        self.image = main.pygame.image.load(image_path)
+        self.image = settings.get_image(image_path).convert_alpha()
         self.image = main.pygame.transform.scale(self.image, (size, size))
-        settings.image_library[image_path] = self.image
         self.image_rect = self.image.get_rect()
         self.image_rect.topleft = (2 * settings.WINDOWWIDTH / 3, settings.WINDOWHEIGHT - size)
-        # self.cook_bot_right = (2 * settings.WINDOWWIDTH / 3 + size, settings.WINDOWHEIGHT)
 
     def draw(self):
         settings.DISPLAYSURF.blit(self.image, self.image_rect)

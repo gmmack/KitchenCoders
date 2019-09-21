@@ -12,7 +12,7 @@ class Block(main.pygame.sprite.Sprite):
         self.path = path
         height = int(settings.WINDOWHEIGHT/24)
         # self.blockSurf = main.pygame.Surface((10 * length, 20))
-        self.blockSurf = main.pygame.image.load(path)
+        self.blockSurf = settings.get_image(path).convert_alpha()
         self.blockSurf = main.pygame.transform.scale(self.blockSurf, (height*2, height))
         settings.image_library[self.path] = self.blockSurf
         self.blockRect = self.blockSurf.get_rect()

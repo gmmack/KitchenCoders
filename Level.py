@@ -3,6 +3,7 @@ import main
 import Block
 import Debug
 import CookButton
+import Recycle
 
 
 class Level(main.pygame.sprite.Sprite):
@@ -11,11 +12,8 @@ class Level(main.pygame.sprite.Sprite):
         self.debug = Debug.Debug()
         size = int(settings.WINDOWWIDTH / 8)
         self.img_size = size
-        recycle_path = 'images/recycle.png'
+        self.recycle = Recycle.Recycle(size)
         self.cook = CookButton.CookButton(size)
-        self.recycle_img = main.pygame.image.load(recycle_path)
-        self.recycle_img = main.pygame.transform.scale(self.recycle_img, (size, size))
-        settings.image_library[recycle_path] = self.recycle_img
 
     # Checks for collision and moves the clicked block
     def handleMouseDown(self, mousePoint, block):
@@ -133,8 +131,9 @@ class Level(main.pygame.sprite.Sprite):
         x_two_thirds = 2*settings.WINDOWWIDTH/3
         x_offset_by_size = settings.WINDOWWIDTH - settings.WINDOWWIDTH / 8
         y_offset_by_size = settings.WINDOWHEIGHT - settings.WINDOWWIDTH / 8
-        settings.DISPLAYSURF.blit(self.recycle_img, (x_offset_by_size, y_offset_by_size))
+        # settings.DISPLAYSURF.blit(self.recycle_img, (x_offset_by_size, y_offset_by_size))
         self.cook.draw()
+        self.recycle.draw()
 
         # If debug is set draw debug info
         if self.debug.debug_on:
