@@ -3,7 +3,7 @@ import main
 
 
 class Block(main.pygame.sprite.Sprite):
-    def __init__(self, text, center, length, bank, path):
+    def __init__(self, text, center, bank, path):
         super(Block, self).__init__()
         self.drag = False
         self.text = text
