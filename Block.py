@@ -30,7 +30,7 @@ class Block(main.pygame.sprite.Sprite):
         self.blockRect.midleft = block.blockRect.midright
         # self.textRect.center = self.blockRect.center
 
-    def draw(self, color):
+    def draw(self):
         # main.pygame.draw.rect(settings.DISPLAYSURF, color, self.blockRect)
         # settings.DISPLAYSURF.blit(self.textSurf, self.textRect)
         settings.DISPLAYSURF.blit(self.blockSurf, self.blockRect)

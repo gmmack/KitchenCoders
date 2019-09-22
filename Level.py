@@ -91,7 +91,6 @@ class Level(main.pygame.sprite.Sprite):
         max_line = -1
         max_count = error_counts[0]
         for line_number in range(1, settings.NUMLINES):
-            print("max line = ", max_line)
             if error_counts[line_number-1] == len(self.solutions):  # If any lane fails for all solutions
                 max_line = line_number
                 break
@@ -118,9 +117,9 @@ class Level(main.pygame.sprite.Sprite):
 
         # Draw blocks
         for function in self.functions:
-            function.draw(settings.RED)
+            function.draw()
         for ingredient in self.ingredients:
-            ingredient.draw(settings.GREEN)
+            ingredient.draw()
 
     # Draws background info
     def drawBackground(self):
