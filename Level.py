@@ -295,5 +295,4 @@ class Level(main.pygame.sprite.Sprite):
                 first = False
             else:
                 curr_block.trailBlock(prev)
-                pass
             prev = curr_block

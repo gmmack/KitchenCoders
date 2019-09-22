@@ -47,7 +47,9 @@ def run_game(level):
                                         level.functions.remove(block)
                                     elif block.type == 'ingredient' and block in level.ingredients:
                                         level.ingredients.remove(block)
-                            if not function.snap(level.draglist):
+                            if function.snappable():
+                                function.snap(level.draglist)
+                            else:
                                 function.snapped = False
                         function.drag = False
                     for ingredient in level.ingredients:
@@ -59,7 +61,9 @@ def run_game(level):
                                         level.functions.remove(block)
                                     elif block.type == 'ingredient' and block in level.ingredients:
                                         level.ingredients.remove(block)
-                            if not ingredient.snap(level.draglist):
+                            if ingredient.snappable():
+                                ingredient.snap(level.draglist)
+                            else:
                                 ingredient.snapped = False
                         ingredient.drag = False
                     mousePoint = pygame.mouse.get_pos()
