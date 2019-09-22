@@ -16,3 +16,9 @@ class Recycle(main.pygame.sprite.Sprite):
     def draw(self):
         settings.DISPLAYSURF.blit(self.image, self.image_rect)
 
+    # Return true if mouse_point is within the recycle icon
+    def check_position(self, mouse_point):
+        if settings.WINDOWWIDTH - self.size < mouse_point[0] < settings.WINDOWWIDTH and \
+                settings.WINDOWHEIGHT - self.size < mouse_point[1] < settings.WINDOWHEIGHT:
+            return True
+        return False

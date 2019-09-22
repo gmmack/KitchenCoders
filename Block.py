@@ -118,8 +118,8 @@ class Block(main.pygame.sprite.Sprite):
 
 
 class FBlock(Block):
-    def __init__(self, text, center, length, bank, path):
-        super(FBlock, self).__init__(text, center, length, bank, path)
+    def __init__(self, text, center, bank, path):
+        super(FBlock, self).__init__(text, center, bank, path)
         self.type = "function"
 
     # Snaps function blocks into place in whatever line of code they were dropped nearest, ret True if successful
@@ -149,8 +149,8 @@ class FBlock(Block):
 
 
 class IBlock(Block):
-    def __init__(self, text, center, length, bank, path):
-        super(IBlock, self).__init__(text, center, length, bank, path)
+    def __init__(self, text, center, bank, path):
+        super(IBlock, self).__init__(text, center, bank, path)
         self.type = "ingredient"
 
     # Snaps ingredient block into place if near overlapping block in current line, ret True if successful

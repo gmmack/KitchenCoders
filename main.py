@@ -40,11 +40,25 @@ def run_game(level):
                     # Reset to nothing being dragged, and snap blocks together if close
                     for function in level.functions:
                         if function.drag:
+                            if level.recycle.check_position(pygame.mouse.get_pos()):
+                                level.functions.remove(function)
+                                for block in level.draglist:
+                                    if block.type == 'function' and block in level.functions:
+                                        level.functions.remove(block)
+                                    elif block.type == 'ingredient' and block in level.ingredients:
+                                        level.ingredients.remove(block)
                             if not function.snap(level.draglist):
                                 function.snapped = False
                         function.drag = False
                     for ingredient in level.ingredients:
                         if ingredient.drag:
+                            if level.recycle.check_position(pygame.mouse.get_pos()):
+                                level.ingredients.remove(ingredient)
+                                for block in level.draglist:
+                                    if block.type == 'function' and block in level.functions:
+                                        level.functions.remove(block)
+                                    elif block.type == 'ingredient' and block in level.ingredients:
+                                        level.ingredients.remove(block)
                             if not ingredient.snap(level.draglist):
                                 ingredient.snapped = False
                         ingredient.drag = False

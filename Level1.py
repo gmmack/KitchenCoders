@@ -12,9 +12,9 @@ class Level1(Level.Level):
         # self.solution = [['Toast', 'Bread Slice']]
         self.draglist = []
         self.next = Level2.Level2
-        toast = Block.FBlock('Toast', (settings.WINDOWWIDTH / 24, settings.WINDOWHEIGHT / 16), len('Toast'), True, 'images/toast.png')
+        toast = Block.FBlock('Toast', (settings.WINDOWWIDTH / 24, settings.WINDOWHEIGHT / 16), True, 'images/toast.png')
         breadSlice = Block.IBlock('Bread Slice', (settings.WINDOWWIDTH / 24, 9 * settings.WINDOWHEIGHT / 16),
-                                  len('Bread Slice'), True, 'images/breadslice.png')
+                                  True, 'images/breadslice.png')
         self.functions, self.ingredients = [toast], [breadSlice]
 
     # For success: Toast->Bread Slice

@@ -21,10 +21,10 @@ class Level(main.pygame.sprite.Sprite):
             if block.bank:
                 # create new instance of function with bank=false
                 if block.type == "function":
-                    new_block = Block.FBlock(block.text, block.blockRect.center, len(block.text), False, block.path)
+                    new_block = Block.FBlock(block.text, block.blockRect.center, False, block.path)
                     self.functions.append(new_block)
                 elif block.type == "ingredient":
-                    new_block = Block.IBlock(block.text, block.blockRect.center, len(block.text), False, block.path)
+                    new_block = Block.IBlock(block.text, block.blockRect.center, False, block.path)
                     self.ingredients.append(new_block)
                 new_block.setPos(mousePoint)
                 new_block.drag = True

@@ -14,12 +14,12 @@ class Level2(Level.Level):
         self.solutions = self.create_solution_dicts()
         self.draglist = []
         self.next = Level3.Level3
-        toast = Block.FBlock(toast_str, (settings.WINDOWWIDTH / 24, settings.WINDOWHEIGHT / 16), len(toast_str), True,
+        toast = Block.FBlock(toast_str, (settings.WINDOWWIDTH / 24, settings.WINDOWHEIGHT / 16), True,
                              'images/toast.png')
-        butter = Block.FBlock(butter_str, (settings.WINDOWWIDTH / 24, 2*settings.WINDOWHEIGHT / 16), len(butter_str),
+        butter = Block.FBlock(butter_str, (settings.WINDOWWIDTH / 24, 2*settings.WINDOWHEIGHT / 16),
                               True, 'images/butter.png')
         breadSlice = Block.IBlock('Bread Slice', (settings.WINDOWWIDTH / 24, 9 * settings.WINDOWHEIGHT / 16),
-                                  len(bread_slice_str), True, 'images/breadslice.png')
+                                  True, 'images/breadslice.png')
         self.functions, self.ingredients = [toast, butter], [breadSlice]
 
     @staticmethod
