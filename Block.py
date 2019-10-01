@@ -14,7 +14,6 @@ class Block(main.pygame.sprite.Sprite):
         # self.blockSurf = main.pygame.Surface((10 * length, 20))
         self.blockSurf = settings.get_image(path).convert_alpha()
         self.blockSurf = main.pygame.transform.scale(self.blockSurf, (self.height*2, self.height))
-        settings.image_library[self.path] = self.blockSurf
         self.blockRect = self.blockSurf.get_rect()
         # self.textSurf = settings.BASICFONT.render(text, True, settings.WHITE)
         # self.textRect = self.textSurf.get_rect()
@@ -36,8 +35,13 @@ class Block(main.pygame.sprite.Sprite):
         settings.DISPLAYSURF.blit(self.blockSurf, self.blockRect)
 
     # Draws a shadow block where the block would appear if it were dropped
-    def draw_shadow(self):
-        pass
+    # 7th index used to concatenate 'images/transparent_name.png'
+    def draw_shadow(self, center):
+        if self.type == 'function':
+            block = FBlock(self.text, center, False, self.path[:7] + 'transparent_' + self.path[7:])
+        elif self.type == 'ingredient':
+            block = IBlock(self.text, center, False, self.path[:7] + 'transparent_' + self.path[7:])
+        return block
 
     # Returns true if point is on the block
     def collide(self, point):
@@ -135,16 +139,15 @@ class FBlock(Block):
                 draglist[i].snapped = True
                 settings.BOARD[line_number].append(draglist[i])
 
-    # Returns true if the block will be snapped upon release
+    # Returns tuple, true if the block will be snapped upon release and center point of shadow
     def snappable(self):
         midBlockY = self.blockRect.centery
         yCoord, line_number = self.getLine(midBlockY)
         if self.blockRect.right > settings.WINDOWWIDTH / 3 and self.blockRect.left < 2 * settings.WINDOWWIDTH / 3:
             midleft_position = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2, yCoord)
             center_position = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2 + self.height, yCoord)
-            # TODO: Also want to return the center position
-            return True
-        return False
+            return True, center_position
+        return False, -1
 
 
 class IBlock(Block):
@@ -167,7 +170,7 @@ class IBlock(Block):
                 draglist[i].snapped = True
                 settings.BOARD[line_number].append(draglist[i])
 
-    # Returns true if the block will be snapped upon release
+    # Returns true if the block will be snapped upon release and center point of shadow
     def snappable(self):
         midBlockY = self.blockRect.centery
         yCoord, line_number = self.getLine(midBlockY)
@@ -180,6 +183,5 @@ class IBlock(Block):
             if self.overlap(other_block):
                 center_position = settings.BOARD[line_number][-1].blockRect.midright
                 center_position = (center_position[0] + self.height, center_position[1])
-                # TODO: Also want to return the center position
-                return True
-        return False
+                return True, center_position
+        return False, -1

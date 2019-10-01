@@ -10,6 +10,8 @@ class Level(main.pygame.sprite.Sprite):
     def __init__(self):
         super(Level, self).__init__()
         self.debug = Debug.Debug()
+        self.shadow_blocks = []
+        self.shadow_drawable = True
         size = int(settings.WINDOWWIDTH / 8)
         self.img_size = size
         self.recycle = Recycle.Recycle(size)
@@ -48,6 +50,7 @@ class Level(main.pygame.sprite.Sprite):
                 else:
                     block.setPos(mousePoint)
                     block.drag = True
+                    self.draglist.append(block)
         elif self.cook.button_pressed(mousePoint):
             return self.check_win()
         return False
@@ -120,6 +123,8 @@ class Level(main.pygame.sprite.Sprite):
             function.draw()
         for ingredient in self.ingredients:
             ingredient.draw()
+        for shadow in self.shadow_blocks:
+            shadow.draw()
 
     # Draws background info
     def drawBackground(self):
@@ -283,9 +288,27 @@ class Level(main.pygame.sprite.Sprite):
     def updateBlocks(self):
         for function in self.functions:
             if function.drag:
+                if function.snappable()[0] and self.shadow_drawable:
+                    center = function.snappable()[1]
+                    new_block = function.draw_shadow(center)
+                    self.shadow_blocks.append(new_block)
+                    for i in range(1, len(self.draglist)):
+                        center = (center[0] + function.height*2, center[1])  # Resets center for next iteration of loop
+                        new_block = self.draglist[i].draw_shadow(center)
+                        self.shadow_blocks.append(new_block)
+                    self.shadow_drawable = False
                 function.setPos(main.pygame.mouse.get_pos())
         for ingredient in self.ingredients:
             if ingredient.drag:
+                if ingredient.snappable()[0] and self.shadow_drawable:
+                    center = ingredient.snappable()[1]
+                    new_block = ingredient.draw_shadow(center)
+                    self.shadow_blocks.append(new_block)
+                    for i in range(1, len(self.draglist)):
+                        center = (center[0] + ingredient.height * 2, center[1])  # Resets center for next iteration of loop
+                        new_block = self.draglist[i].draw_shadow(center)
+                        self.shadow_blocks.append(new_block)
+                    self.shadow_drawable = False
                 ingredient.setPos(main.pygame.mouse.get_pos())
         # Set first block in draglist to be mouse position, and rest of list trail the previous block
         first = True
@@ -296,3 +319,28 @@ class Level(main.pygame.sprite.Sprite):
             else:
                 curr_block.trailBlock(prev)
             prev = curr_block
+        # Make sure first block in draglist is still snappable, destroy list and reset bool if not
+        # TODO: Need to delete shadow_blocks list and reset info if it's not snappable (what I'm doing rn), or if
+        # TODO: the current line number of draglist[0] is different from the line number of shadow_blocks[0]
+        # Need to figure out how to access line number based on position of draglist[0] and shadow_blocks[0] to compare
+        try:
+            throwaway, drag_line_number = self.draglist[0].getLine(self.draglist[0].blockRect.centery)
+            throwaway, shadow_line_number = self.shadow_blocks[0].getLine(self.shadow_blocks[0].blockRect.centery)
+            if (drag_line_number is not shadow_line_number) or (not self.draglist[0].snappable()[0]):
+                self.reset_shadow()
+        except IndexError as e:
+            print(e)
+
+        """for block in self.draglist:  # Loop exists to prevent trying to access index of empty list
+            throwaway, drag_line_number = self.draglist[0].getLine(self.draglist[0].blockRect.centery)
+            # TODO: Below line causing error, need to make sure it's only executed if there's something in shadow blocks
+            # TODO: Maybe Try->Except block?
+            throwaway, shadow_line_number = self.shadow_blocks[0].getLine(self.shadow_blocks[0].blockRect.centery)
+            # If line number of block being dragged and shadow block are not same or dragged block is not snappable
+            if (drag_line_number is not shadow_line_number) or (not self.draglist[0].snappable()[0]):
+                self.reset_shadow()
+            break"""
+
+    def reset_shadow(self):
+        self.shadow_drawable = True
+        self.shadow_blocks = []

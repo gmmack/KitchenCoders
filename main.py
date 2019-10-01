@@ -47,7 +47,7 @@ def run_game(level):
                                         level.functions.remove(block)
                                     elif block.type == 'ingredient' and block in level.ingredients:
                                         level.ingredients.remove(block)
-                            if function.snappable():
+                            if function.snappable()[0]:
                                 function.snap(level.draglist)
                             else:
                                 function.snapped = False
@@ -61,7 +61,7 @@ def run_game(level):
                                         level.functions.remove(block)
                                     elif block.type == 'ingredient' and block in level.ingredients:
                                         level.ingredients.remove(block)
-                            if ingredient.snappable():
+                            if ingredient.snappable()[0]:
                                 ingredient.snap(level.draglist)
                             else:
                                 ingredient.snapped = False
@@ -71,6 +71,10 @@ def run_game(level):
                     print("BOARD = ", BOARD)
             elif event.type == pygame.MOUSEMOTION:
                 level.updateBlocks()
+                print("SHADOW BLOCKS = ", level.shadow_blocks)
+                print("SHADOW DRAWABLE = ", level.shadow_drawable)
+                print("DRAGLIST = ", level.draglist)
+                print("FUNCTIONS =  ", level.functions)
             elif event.type == pygame.VIDEORESIZE:
                 settings.WINDOWWIDTH, settings.WINDOWHEIGHT = pygame.display.get_surface().get_size()
 
