@@ -9,11 +9,11 @@ class Level1(Level.Level):
         super(Level1, self).__init__()
         self.recipeTitle = "Toast"
         self.solutions = self.create_solution_dicts()
-        # self.solution = [['Toast', 'Bread Slice']]
-        self.draglist = []
         self.next = Level2.Level2
-        toast = Block.FBlock('Toast', (settings.WINDOWWIDTH / 24, settings.WINDOWHEIGHT / 16), True, 'images/toast.png')
-        breadSlice = Block.IBlock('Bread Slice', (settings.WINDOWWIDTH / 24, 9 * settings.WINDOWHEIGHT / 16),
+        bread_slice_str = 'Bread Slice'
+        toast_str = 'Toast'
+        toast = Block.FBlock(toast_str, (settings.WINDOWWIDTH / 24, settings.WINDOWHEIGHT / 16), True, 'images/toast.png')
+        breadSlice = Block.IBlock(bread_slice_str, (settings.WINDOWWIDTH / 24, 9 * settings.WINDOWHEIGHT / 16),
                                   True, 'images/breadslice.png')
         self.functions, self.ingredients = [toast], [breadSlice]
 

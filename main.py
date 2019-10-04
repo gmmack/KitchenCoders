@@ -71,12 +71,13 @@ def run_game(level):
                     print("BOARD = ", BOARD)
             elif event.type == pygame.MOUSEMOTION:
                 level.updateBlocks()
-                print("SHADOW BLOCKS = ", level.shadow_blocks)
-                print("SHADOW DRAWABLE = ", level.shadow_drawable)
-                print("DRAGLIST = ", level.draglist)
-                print("FUNCTIONS =  ", level.functions)
+                level.timer.set_start()
             elif event.type == pygame.VIDEORESIZE:
                 settings.WINDOWWIDTH, settings.WINDOWHEIGHT = pygame.display.get_surface().get_size()
+
+        # Recurring check for tooltips
+        level.create_tooltip()
+
 
         DISPLAYSURF.fill(CYAN)  # Fills background with cyan
         level.draw()

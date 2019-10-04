@@ -4,13 +4,17 @@ import Block
 import Debug
 import CookButton
 import Recycle
+import Timer
 
 
 class Level(main.pygame.sprite.Sprite):
     def __init__(self):
         super(Level, self).__init__()
         self.debug = Debug.Debug()
+        self.timer = Timer.Timer()
+        self.draglist = []
         self.shadow_blocks = []
+        self.tooltips = []
         self.shadow_drawable = True
         size = int(settings.WINDOWWIDTH / 8)
         self.img_size = size
@@ -106,6 +110,24 @@ class Level(main.pygame.sprite.Sprite):
         self.debug.debug_on = True
         return False
 
+    # Figures out if a tooltip should be displayed; ret block corresponding to correct tooltip, None if no tooltip shown
+    def check_tooltip(self):
+        if self.timer.show_tooltip():
+            for function in self.functions:
+                if function.blockRect.collidepoint(main.pygame.mouse.get_pos()):
+                    return function
+            for ingredient in self.ingredients:
+                if ingredient.blockRect.collidepoint(main.pygame.mouse.get_pos()):
+                    return ingredient
+        return None
+
+    # Figures out if a new tooltip should be created, and if it should creates it and adds it to the tooltip list
+    def create_tooltip(self):
+        tooltip = self.check_tooltip()
+        if tooltip is not None:
+            # Create new tooltip based on the block 'tooltip' var is set to
+            print("MAKE THE TOOLTIP NOW BITCH")
+
     def draw(self):
         # Draw directions on right side of screen
 
@@ -125,6 +147,8 @@ class Level(main.pygame.sprite.Sprite):
             ingredient.draw()
         for shadow in self.shadow_blocks:
             shadow.draw()
+        for tooltip in self.tooltips:
+            tooltip.draw()
 
     # Draws background info
     def drawBackground(self):
@@ -132,10 +156,6 @@ class Level(main.pygame.sprite.Sprite):
         backgroundsFont = main.pygame.font.Font('freesansbold.ttf', 34)
 
         # Draw recycle/cook sprites
-        x_two_thirds = 2*settings.WINDOWWIDTH/3
-        x_offset_by_size = settings.WINDOWWIDTH - settings.WINDOWWIDTH / 8
-        y_offset_by_size = settings.WINDOWHEIGHT - settings.WINDOWWIDTH / 8
-        # settings.DISPLAYSURF.blit(self.recycle_img, (x_offset_by_size, y_offset_by_size))
         self.cook.draw()
         self.recycle.draw()
 
@@ -329,7 +349,8 @@ class Level(main.pygame.sprite.Sprite):
             if (drag_line_number is not shadow_line_number) or (not self.draglist[0].snappable()[0]):
                 self.reset_shadow()
         except IndexError as e:
-            print(e)
+            pass
+            # print(e)
 
         """for block in self.draglist:  # Loop exists to prevent trying to access index of empty list
             throwaway, drag_line_number = self.draglist[0].getLine(self.draglist[0].blockRect.centery)
