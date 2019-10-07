@@ -1,22 +1,26 @@
 import settings
 import main
 import Block
+import Debug
+import CookButton
+import Recycle
+import Tooltip
+import Timer
 
 
 class Level(main.pygame.sprite.Sprite):
     def __init__(self):
         super(Level, self).__init__()
-        # TODO: Create cookButton class and instantiate cookButton object as instance variable in level
+        self.debug = Debug.Debug()
+        self.timer = Timer.Timer()
+        self.draglist = []
+        self.shadow_blocks = []
+        self.tooltips = []
+        self.shadow_drawable = True
         size = int(settings.WINDOWWIDTH / 8)
-        stove_path, recycle_path = 'images/stove.png', 'images/recycle.png'
-        self.cook_img = main.pygame.image.load(stove_path)
-        self.cook_img = main.pygame.transform.scale(self.cook_img, (size, size))
-        self.cook_top_left = (2*settings.WINDOWWIDTH/3, settings.WINDOWHEIGHT - size)
-        self.cook_bot_right = (2*settings.WINDOWWIDTH/3 + size, settings.WINDOWHEIGHT)
-        self.recycle_img = main.pygame.image.load(recycle_path)
-        self.recycle_img = main.pygame.transform.scale(self.recycle_img, (size, size))
-        settings.image_library[stove_path] = self.cook_img
-        settings.image_library[recycle_path] = self.recycle_img
+        self.img_size = size
+        self.recycle = Recycle.Recycle(size)
+        self.cook = CookButton.CookButton(size)
 
     # Checks for collision and moves the clicked block
     def handleMouseDown(self, mousePoint, block):
@@ -24,10 +28,10 @@ class Level(main.pygame.sprite.Sprite):
             if block.bank:
                 # create new instance of function with bank=false
                 if block.type == "function":
-                    new_block = Block.FBlock(block.text, block.blockRect.center, len(block.text), False)
+                    new_block = Block.FBlock(block.text, block.blockRect.center, False, block.path)
                     self.functions.append(new_block)
                 elif block.type == "ingredient":
-                    new_block = Block.IBlock(block.text, block.blockRect.center, len(block.text), False)
+                    new_block = Block.IBlock(block.text, block.blockRect.center, False, block.path)
                     self.ingredients.append(new_block)
                 new_block.setPos(mousePoint)
                 new_block.drag = True
@@ -51,16 +55,80 @@ class Level(main.pygame.sprite.Sprite):
                 else:
                     block.setPos(mousePoint)
                     block.drag = True
-        elif self.cook_pressed(mousePoint):
+                    self.draglist.append(block)
+        elif self.cook.button_pressed(mousePoint):
             return self.check_win()
         return False
 
-    # Returns true if the cook button was pressed
-    def cook_pressed(self, point):
-        if self.cook_bot_right[0] > point[0] > self.cook_top_left[0] and \
-                self.cook_top_left[1] < point[1] < self.cook_bot_right[1]:
-            return True
+    # Returns true if BOARD is in a winning state
+    def check_win(self):
+        # Populate new board dict with settings.BOARD discounting any blank lines
+        board = settings.create_blank_dict()
+        new_line_number = 1
+        for line_number in range(1, settings.NUMLINES):  # Loop through lines
+            if len(settings.BOARD[line_number]) > 0:  # If there's something in the line
+                # Loop through line appending each item to board[new_line_number]
+                for block in settings.BOARD[line_number]:
+                    board[new_line_number].append(block.text)
+                new_line_number += 1
+
+        # Loop through list of solution dicts
+        for dictionary in self.solutions:
+            if dictionary == board:
+                return True
+
+        # Initialize error count list to 0's
+        error_counts = []
+        for i in range(settings.NUMLINES):
+            error_counts.append(0)
+
+        for solution in self.solutions:  # Loop through solution dicts
+            solution_line = 1
+            for line_number in range(1, settings.NUMLINES):  # Inner loop through each line of board
+                if len(settings.BOARD[line_number]) > 0:  # If there's something in the line
+                    # Loop through board[line_number] creating list of same size with each block's text
+                    board_text = []
+                    for block in settings.BOARD[line_number]:
+                        board_text.append(block.text)
+                    # Compare block list at each line of board to block list at corresponding line of solution
+                    if board_text != solution[solution_line]:
+                        error_counts[line_number-1] += 1  # Increment error count
+                    solution_line += 1
+
+        # Determine first line with error count same as num of solutions (Count is 0 indexed, lines are 1 indexed)
+        max_line = -1
+        max_count = error_counts[0]
+        for line_number in range(1, settings.NUMLINES):
+            if error_counts[line_number-1] == len(self.solutions):  # If any lane fails for all solutions
+                max_line = line_number
+                break
+            if max_count < error_counts[line_number-1]:
+                # If no line failed for all solutions, pick the lane that failed on the most solutions
+                max_count = error_counts[line_number-1]
+                max_line = line_number
+
+        self.debug.line_number = max_line
+        self.debug.debug_on = True
         return False
+
+    # Figures out if a tooltip should be displayed; ret block corresponding to correct tooltip, None if no tooltip shown
+    def check_tooltip(self):
+        if self.timer.show_tooltip():
+            for function in self.functions:
+                if function.blockRect.collidepoint(main.pygame.mouse.get_pos()):
+                    return function
+            for ingredient in self.ingredients:
+                if ingredient.blockRect.collidepoint(main.pygame.mouse.get_pos()):
+                    return ingredient
+        return None
+
+    # Figures out if a new tooltip should be created, and if it should creates it and adds it to the tooltip list
+    def update_tooltip(self):
+        block = self.check_tooltip()
+        if block is not None:
+            # Create new tooltip based on the block 'tooltip' var is set to
+            path = block.path[:7] + "tooltip_" + block.path[7:]
+            self.tooltips.append(Tooltip.Tooltip(path))
 
     def draw(self):
         # Draw directions on right side of screen
@@ -76,9 +144,13 @@ class Level(main.pygame.sprite.Sprite):
 
         # Draw blocks
         for function in self.functions:
-            function.draw(settings.RED)
+            function.draw()
         for ingredient in self.ingredients:
-            ingredient.draw(settings.GREEN)
+            ingredient.draw()
+        for shadow in self.shadow_blocks:
+            shadow.draw()
+        for tooltip in self.tooltips:
+            tooltip.draw()
 
     # Draws background info
     def drawBackground(self):
@@ -86,12 +158,12 @@ class Level(main.pygame.sprite.Sprite):
         backgroundsFont = main.pygame.font.Font('freesansbold.ttf', 34)
 
         # Draw recycle/cook sprites
-        x_two_thirds = 2*settings.WINDOWWIDTH/3
-        x_offset_by_size = settings.WINDOWWIDTH - settings.WINDOWWIDTH / 8
-        y_offset_by_size = settings.WINDOWHEIGHT - settings.WINDOWWIDTH / 8
-        settings.DISPLAYSURF.blit(self.recycle_img, (x_offset_by_size, y_offset_by_size))
-        #settings.DISPLAYSURF.blit(self.cook_img, (x_two_thirds, y_offset_by_size))
-        settings.DISPLAYSURF.blit(self.cook_img, self.cook_top_left)
+        self.cook.draw()
+        self.recycle.draw()
+
+        # If debug is set draw debug info
+        if self.debug.debug_on:
+            self.debug.draw_debug(self.img_size)
 
         gridcolor = settings.PINK
         gridlength = 3
@@ -238,9 +310,27 @@ class Level(main.pygame.sprite.Sprite):
     def updateBlocks(self):
         for function in self.functions:
             if function.drag:
+                if function.snappable()[0] and self.shadow_drawable:
+                    center = function.snappable()[1]
+                    new_block = function.draw_shadow(center)
+                    self.shadow_blocks.append(new_block)
+                    for i in range(1, len(self.draglist)):
+                        center = (center[0] + function.height*2, center[1])  # Resets center for next iteration of loop
+                        new_block = self.draglist[i].draw_shadow(center)
+                        self.shadow_blocks.append(new_block)
+                    self.shadow_drawable = False
                 function.setPos(main.pygame.mouse.get_pos())
         for ingredient in self.ingredients:
             if ingredient.drag:
+                if ingredient.snappable()[0] and self.shadow_drawable:
+                    center = ingredient.snappable()[1]
+                    new_block = ingredient.draw_shadow(center)
+                    self.shadow_blocks.append(new_block)
+                    for i in range(1, len(self.draglist)):
+                        center = (center[0] + ingredient.height * 2, center[1])  # Resets center for next iteration of loop
+                        new_block = self.draglist[i].draw_shadow(center)
+                        self.shadow_blocks.append(new_block)
+                    self.shadow_drawable = False
                 ingredient.setPos(main.pygame.mouse.get_pos())
         # Set first block in draglist to be mouse position, and rest of list trail the previous block
         first = True
@@ -250,5 +340,30 @@ class Level(main.pygame.sprite.Sprite):
                 first = False
             else:
                 curr_block.trailBlock(prev)
-                pass
             prev = curr_block
+        # Make sure first block in draglist is still snappable, destroy list and reset bool if not
+        # TODO: Need to delete shadow_blocks list and reset info if it's not snappable (what I'm doing rn), or if
+        # TODO: the current line number of draglist[0] is different from the line number of shadow_blocks[0]
+        # Need to figure out how to access line number based on position of draglist[0] and shadow_blocks[0] to compare
+        try:
+            throwaway, drag_line_number = self.draglist[0].getLine(self.draglist[0].blockRect.centery)
+            throwaway, shadow_line_number = self.shadow_blocks[0].getLine(self.shadow_blocks[0].blockRect.centery)
+            if (drag_line_number is not shadow_line_number) or (not self.draglist[0].snappable()[0]):
+                self.reset_shadow()
+        except IndexError as e:
+            pass
+            # print(e)
+
+        """for block in self.draglist:  # Loop exists to prevent trying to access index of empty list
+            throwaway, drag_line_number = self.draglist[0].getLine(self.draglist[0].blockRect.centery)
+            # TODO: Below line causing error, need to make sure it's only executed if there's something in shadow blocks
+            # TODO: Maybe Try->Except block?
+            throwaway, shadow_line_number = self.shadow_blocks[0].getLine(self.shadow_blocks[0].blockRect.centery)
+            # If line number of block being dragged and shadow block are not same or dragged block is not snappable
+            if (drag_line_number is not shadow_line_number) or (not self.draglist[0].snappable()[0]):
+                self.reset_shadow()
+            break"""
+
+    def reset_shadow(self):
+        self.shadow_drawable = True
+        self.shadow_blocks = []

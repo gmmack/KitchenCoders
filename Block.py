@@ -3,35 +3,45 @@ import main
 
 
 class Block(main.pygame.sprite.Sprite):
-    def __init__(self, text, center, length, bank):
+    def __init__(self, text, center, bank, path):
         super(Block, self).__init__()
         self.drag = False
         self.text = text
         self.bank = bank  # Use to keep track of static bank blocks which don't ever move/disappear
         self.snapped = False  # Use to update BOARD state when you pick up a snapped block
-        self.blockSurf = main.pygame.Surface((10 * length, 20))
+        self.path = path
+        self.height = int(settings.WINDOWHEIGHT/24)
+        # self.blockSurf = main.pygame.Surface((10 * length, 20))
+        self.blockSurf = settings.get_image(path).convert_alpha()
+        self.blockSurf = main.pygame.transform.scale(self.blockSurf, (self.height*2, self.height))
         self.blockRect = self.blockSurf.get_rect()
-        self.textSurf = settings.BASICFONT.render(text, True, settings.WHITE)
-        self.textRect = self.textSurf.get_rect()
+        # self.textSurf = settings.BASICFONT.render(text, True, settings.WHITE)
+        # self.textRect = self.textSurf.get_rect()
         self.setPos(center)
 
     # Sets position of block to be centered on point
     def setPos(self, point):
-        self.textRect.center = point
+        # self.textRect.center = point
         self.blockRect.center = point
 
     # Sets self block to be trailing behind block
     def trailBlock(self, block):
         self.blockRect.midleft = block.blockRect.midright
-        self.textRect.center = self.blockRect.center
+        # self.textRect.center = self.blockRect.center
 
-    def draw(self, color):
-        main.pygame.draw.rect(settings.DISPLAYSURF, color, self.blockRect)
-        settings.DISPLAYSURF.blit(self.textSurf, self.textRect)
+    def draw(self):
+        # main.pygame.draw.rect(settings.DISPLAYSURF, color, self.blockRect)
+        # settings.DISPLAYSURF.blit(self.textSurf, self.textRect)
+        settings.DISPLAYSURF.blit(self.blockSurf, self.blockRect)
 
     # Draws a shadow block where the block would appear if it were dropped
-    def draw_shadow(self):
-        pass
+    # 7th index used to concatenate 'images/transparent_name.png'
+    def draw_shadow(self, center):
+        if self.type == 'function':
+            block = FBlock(self.text, center, False, self.path[:7] + 'transparent_' + self.path[7:])
+        elif self.type == 'ingredient':
+            block = IBlock(self.text, center, False, self.path[:7] + 'transparent_' + self.path[7:])
+        return block
 
     # Returns true if point is on the block
     def collide(self, point):
@@ -112,43 +122,56 @@ class Block(main.pygame.sprite.Sprite):
 
 
 class FBlock(Block):
-    def __init__(self, text, center, length, bank):
-        super(FBlock, self).__init__(text, center, length, bank)
+    def __init__(self, text, center, bank, path):
+        super(FBlock, self).__init__(text, center, bank, path)
         self.type = "function"
 
-    # Snaps function blocks into place in whatever line of code they were dropped nearest, ret True if successful
+    # Snaps function block and any trailing blocks into place in whatever line of code they were dropped nearest
     def snap(self, draglist):
         midBlockY = self.blockRect.centery
         yCoord, line_number = self.getLine(midBlockY)
-        if self.blockRect.right > settings.WINDOWWIDTH/3 and self.blockRect.left < 2*settings.WINDOWWIDTH/3:
-            self.snapped = True
-            self.textRect.midleft = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2, yCoord)
-            self.blockRect.midleft = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2, yCoord)
-            settings.BOARD[line_number].append(self)
-            if len(draglist) > 1:  # If there's anything else being dragged
-                for i in range(1, len(draglist)):
-                    draglist[i].trailBlock(draglist[i-1])
-                    draglist[i].snapped = True
-                    settings.BOARD[line_number].append(draglist[i])
-            return True
-        return False
+        self.snapped = True
+        self.blockRect.midleft = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2, yCoord)
+        settings.BOARD[line_number].append(self)
+        if len(draglist) > 1:  # If there's anything else being dragged
+            for i in range(1, len(draglist)):
+                draglist[i].trailBlock(draglist[i - 1])
+                draglist[i].snapped = True
+                settings.BOARD[line_number].append(draglist[i])
 
-    # Returns true if the block will be snapped upon release
+    # Returns tuple, true if the block will be snapped upon release and center point of shadow
     def snappable(self):
         midBlockY = self.blockRect.centery
         yCoord, line_number = self.getLine(midBlockY)
         if self.blockRect.right > settings.WINDOWWIDTH / 3 and self.blockRect.left < 2 * settings.WINDOWWIDTH / 3:
-            return True
-        return False
+            midleft_position = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2, yCoord)
+            center_position = (settings.WINDOWWIDTH / 3 + settings.BUFFER * 2 + self.height, yCoord)
+            return True, center_position
+        return False, -1
 
 
 class IBlock(Block):
-    def __init__(self, text, center, length, bank):
-        super(IBlock, self).__init__(text, center, length, bank)
+    def __init__(self, text, center, bank, path):
+        super(IBlock, self).__init__(text, center, bank, path)
         self.type = "ingredient"
 
-    # Snaps ingredient block into place if near overlapping block in current line, ret True if successful
+    # Snaps ingredient block and any trailing blocks into place
     def snap(self, draglist):
+        midBlockY = self.blockRect.centery
+        yCoord, line_number = self.getLine(midBlockY)
+
+        self.blockRect.midleft = settings.BOARD[line_number][-1].blockRect.midright  # gets back of board list
+        self.setPos(self.blockRect.center)
+        self.snapped = True
+        settings.BOARD[line_number].append(self)
+        if len(draglist) > 1:  # If there's anything else being dragged
+            for i in range(1, len(draglist)):
+                draglist[i].trailBlock(draglist[i - 1])
+                draglist[i].snapped = True
+                settings.BOARD[line_number].append(draglist[i])
+
+    # Returns true if the block will be snapped upon release and center point of shadow
+    def snappable(self):
         midBlockY = self.blockRect.centery
         yCoord, line_number = self.getLine(midBlockY)
 
@@ -156,22 +179,9 @@ class IBlock(Block):
         # If there's anything in the current line and block is within snappable range
         if len(settings.BOARD[line_number]) > 0:
             other_block = settings.BOARD[line_number][-1]
-            blockRect = other_block.blockRect
 
             if self.overlap(other_block):
-                self.blockRect.midleft = settings.BOARD[line_number][-1].blockRect.midright  # gets back of board list
-                self.setPos(self.blockRect.center)
-                self.snapped = True
-                settings.BOARD[line_number].append(self)
-                if len(draglist) > 1:  # If there's anything else being dragged
-                    for i in range(1, len(draglist)):
-                        draglist[i].trailBlock(draglist[i - 1])
-                        draglist[i].snapped = True
-                        settings.BOARD[line_number].append(draglist[i])
-                return True
-        return False
-
-    # Returns true if the block will be snapped upon release
-    def snappable(self):
-        pass
-
+                center_position = settings.BOARD[line_number][-1].blockRect.midright
+                center_position = (center_position[0] + self.height, center_position[1])
+                return True, center_position
+        return False, -1

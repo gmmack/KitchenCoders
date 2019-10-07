@@ -12,7 +12,7 @@ def main():
     showStartScreen()
     level = Level1
     while level != -1:
-        level = run_game(level())  # Will eventually want level = runGame(level)
+        level = run_game(level())
         # showGameOverScreen()
 
 
@@ -40,15 +40,29 @@ def run_game(level):
                     # Reset to nothing being dragged, and snap blocks together if close
                     for function in level.functions:
                         if function.drag:
-                            if function.snap(level.draglist):
-                                pass
+                            if level.recycle.check_position(pygame.mouse.get_pos()):
+                                level.functions.remove(function)
+                                for block in level.draglist:
+                                    if block.type == 'function' and block in level.functions:
+                                        level.functions.remove(block)
+                                    elif block.type == 'ingredient' and block in level.ingredients:
+                                        level.ingredients.remove(block)
+                            if function.snappable()[0]:
+                                function.snap(level.draglist)
                             else:
                                 function.snapped = False
                         function.drag = False
                     for ingredient in level.ingredients:
                         if ingredient.drag:
-                            if ingredient.snap(level.draglist):
-                                pass
+                            if level.recycle.check_position(pygame.mouse.get_pos()):
+                                level.ingredients.remove(ingredient)
+                                for block in level.draglist:
+                                    if block.type == 'function' and block in level.functions:
+                                        level.functions.remove(block)
+                                    elif block.type == 'ingredient' and block in level.ingredients:
+                                        level.ingredients.remove(block)
+                            if ingredient.snappable()[0]:
+                                ingredient.snap(level.draglist)
                             else:
                                 ingredient.snapped = False
                         ingredient.drag = False
@@ -57,8 +71,13 @@ def run_game(level):
                     print("BOARD = ", BOARD)
             elif event.type == pygame.MOUSEMOTION:
                 level.updateBlocks()
+                level.timer.set_start()
             elif event.type == pygame.VIDEORESIZE:
                 settings.WINDOWWIDTH, settings.WINDOWHEIGHT = pygame.display.get_surface().get_size()
+
+        # Recurring check for tooltips
+        # level.update_tooltip()
+
 
         DISPLAYSURF.fill(CYAN)  # Fills background with cyan
         level.draw()
@@ -69,8 +88,7 @@ def run_game(level):
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
-        # if (level.check_win) -- triggered by button press of "Run Code" button,
-        #     return level.next()
+    settings.BOARD = settings.create_blank_dict()
     return level.next
 
 

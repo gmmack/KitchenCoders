@@ -22,23 +22,31 @@ DISPLAYSURF = main.pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), main.FUL
 #DISPLAYSURF = main.pygame.display.set_mode((0, 0), main.RESIZABLE | main.FULLSCREEN)
 BASICFONT = main.pygame.font.Font('freesansbold.ttf', 18)
 BACKGROUNDSFONT = main.pygame.font.Font('freesansbold.ttf', 34)
-BOARD = { # None if empty, list of objects snapped together otherwise
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-            5: [],
-            6: [],
-            7: [],
-            8: [],
-            9: [],
-            10: [],
-            11: [],
-            12: [],
-            13: [],
-            14: [],
-            15: []
-        }
+
+
+def create_blank_dict():
+    my_dict = {
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        5: [],
+        6: [],
+        7: [],
+        8: [],
+        9: [],
+        10: [],
+        11: [],
+        12: [],
+        13: [],
+        14: [],
+        15: []
+    }
+    return my_dict
+
+
+BOARD = create_blank_dict()
+
 # CURRENTLY UNUSED
 # BACKGROUNDIMAGE = pygame.image.load("background.jpg").convert()
 
@@ -47,8 +55,8 @@ image_library = {}
 
 
 def get_image(path):
-    global _image_library
-    image = _image_library.get(path)
+    global image_library
+    image = image_library.get(path)
     if image == None:
         canonicalized_path = path.replace('/', os.sep).replace('\\', os.sep)
         image = main.pygame.image.load(canonicalized_path)
