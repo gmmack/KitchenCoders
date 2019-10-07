@@ -4,6 +4,7 @@ import Block
 import Debug
 import CookButton
 import Recycle
+import Tooltip
 import Timer
 
 
@@ -122,11 +123,12 @@ class Level(main.pygame.sprite.Sprite):
         return None
 
     # Figures out if a new tooltip should be created, and if it should creates it and adds it to the tooltip list
-    def create_tooltip(self):
-        tooltip = self.check_tooltip()
-        if tooltip is not None:
+    def update_tooltip(self):
+        block = self.check_tooltip()
+        if block is not None:
             # Create new tooltip based on the block 'tooltip' var is set to
-            print("MAKE THE TOOLTIP NOW BITCH")
+            path = block.path[:7] + "tooltip_" + block.path[7:]
+            self.tooltips.append(Tooltip.Tooltip(path))
 
     def draw(self):
         # Draw directions on right side of screen

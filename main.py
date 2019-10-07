@@ -76,7 +76,7 @@ def run_game(level):
                 settings.WINDOWWIDTH, settings.WINDOWHEIGHT = pygame.display.get_surface().get_size()
 
         # Recurring check for tooltips
-        level.create_tooltip()
+        # level.update_tooltip()
 
 
         DISPLAYSURF.fill(CYAN)  # Fills background with cyan
