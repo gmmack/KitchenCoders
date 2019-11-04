@@ -10,24 +10,25 @@ class Level3(Level.Level):
         self.recipeTitle = "Avocado Toast"
         self.solutions = self.create_solution_dicts()
         self.next = Level4.Level4
-        bread_slice_str = 'Bread Slice'
-        toast_str = 'Toast'
-        salt_str = 'Salt'
-        pepper_str = 'Pepper'
-        oil_str = 'Oil'
+        bread_slice_str, avocado_str = 'Bread Slice', 'Avocado'
+        toast_str, slice_str, spread_str, salt_str, pepper_str = 'Toast', 'Slice', 'Spread', 'Salt', 'Pepper'
         toast = Block.FBlock(toast_str, (settings.WINDOWWIDTH / 24, settings.WINDOWHEIGHT / 16), True,
                              'images/toast.png')
-        salt = Block.FBlock(salt_str, (settings.WINDOWWIDTH / 24, 2 * settings.WINDOWHEIGHT / 16),
+        slice = Block.FBlock(slice_str, (settings.WINDOWWIDTH / 24, 2 * settings.WINDOWHEIGHT / 16), True,
+                             'images/slice.png')
+        spread = Block.FBlock(spread_str, (settings.WINDOWWIDTH / 24, 3 * settings.WINDOWHEIGHT / 16), True,
+                             'images/spread.png')
+        salt = Block.FBlock(salt_str, (settings.WINDOWWIDTH / 24, 4 * settings.WINDOWHEIGHT / 16),
                               True, 'images/salt.png')
-        pepper = Block.FBlock(pepper_str, (settings.WINDOWWIDTH / 24, 3 * settings.WINDOWHEIGHT / 16),
+        pepper = Block.FBlock(pepper_str, (settings.WINDOWWIDTH / 24, 5 * settings.WINDOWHEIGHT / 16),
                             True, 'images/pepper.png')
-        oil = Block.FBlock(oil_str, (settings.WINDOWWIDTH / 24, 4 * settings.WINDOWHEIGHT / 16),
-                            True, 'images/oil.png')
         breadSlice = Block.IBlock(bread_slice_str, (settings.WINDOWWIDTH / 24, 9 * settings.WINDOWHEIGHT / 16),
                                   True, 'images/breadslice.png')
-        self.functions, self.ingredients = [toast, salt, pepper, oil], [breadSlice]
+        avocado = Block.IBlock(avocado_str, (settings.WINDOWWIDTH / 24, 10 * settings.WINDOWHEIGHT / 16),
+                                  True, 'images/avocado.png')
+        self.functions, self.ingredients = [toast, slice, spread, salt, pepper], [breadSlice, avocado]
 
-    @staticmethod  # TODO: Write real solution
+    @staticmethod  # TODO: Modify to include slicing and spreading avocado, not using oil as verb, spread olive oil last
     # SOLUTION: Toast->BreadSlice, Salt->BreadSlice, Pepper->BreadSlice, Oil->BreadSlice
     def create_solution_dicts():
         sol1 = settings.create_blank_dict()
