@@ -157,6 +157,8 @@ class Level(main.pygame.sprite.Sprite):
         # create font
         backgroundsFont = main.pygame.font.Font('freesansbold.ttf', 34)
 
+        settings.DISPLAYSURF.fill(settings.CYAN)  # Fills background with cyan
+
         # Draw recycle/cook sprites
         self.cook.draw()
         self.recycle.draw()
