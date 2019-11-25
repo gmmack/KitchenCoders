@@ -78,8 +78,6 @@ def run_game(level):
         # Recurring check for tooltips
         # level.update_tooltip()
 
-
-        DISPLAYSURF.fill(CYAN)  # Fills background with cyan
         level.draw()
 
         # DISPLAYSURF.blit(BACKGROUNDIMAGE, [0, 0])
